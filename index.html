@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>📚 책벗</title>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+<!-- Supabase JS Client (통역사 역할) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+/* ═══════════════════════════════════════════════════════
+   책벗 베타 v2.0  —  STEP 2-1A
+   온보딩: 스플래시 → 환영 → 이름·학년 → Supabase 저장
+═══════════════════════════════════════════════════════ */
+
+:root {
+  --ink:      #1a1208;
+  --paper:    #fdf6e9;
+  --cream:    #f5ead4;
+  --teal:     #1a6b5a;
+  --teal-lt:  #2a8a74;
+  --teal-dk:  #134f43;
+  --gold:     #d4960a;
+  --gold-lt:  #f0b429;
+  --amber:    #e8821a;
+  --rose:     #c0474a;
+  --text:     #2c1d0a;
+  --muted:    #7a6248;
+  --border:   #e0cfa8;
+  --shadow:   rgba(26,18,8,0.12);
+  --r-md:     14px;
+  --r-lg:     22px;
+  --r-xl:     32px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  height: 100%;
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--ink);
+  color: var(--text);
+  overflow: hidden;
+}
+
+/* ─── SCREENS ─────────────────────────────────────── */
+.screen {
+  position: fixed; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity .4s ease, transform .4s ease;
+  transform: translateY(20px);
+}
+.screen.active {
+  opacity: 1; pointer-events: all;
+  transform: translateY(0);
+}
+.screen.exit-up {
+  opacity: 0; transform: translateY(-30px);
+  transition: opacity .35s ease, transform .35s ease;
+  pointer-events: none;
+}
+
+/* ─── SC-01 SPLASH ────────────────────────────────── */
+#sc-splash {
+  background: var(--teal-dk);
+  gap: 0;
+}
+.splash-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 30%, rgba(212,150,10,.18) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 80% at 20% 80%, rgba(26,107,90,.4) 0%, transparent 60%),
+    var(--teal-dk);
+  overflow: hidden;
+}
+.splash-bg::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='60' height='60' fill='none'/%3E%3Ccircle cx='30' cy='30' r='1' fill='rgba(255,255,255,0.04)'/%3E%3C/svg%3E");
+  background-size: 60px 60px;
+}
+.splash-content {
+  position: relative;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 20px;
+  animation: splashReveal 1.2s cubic-bezier(.16,1,.3,1) forwards;
+}
+@keyframes splashReveal {
+  from { opacity:0; transform: scale(.85) translateY(20px); }
+  to   { opacity:1; transform: scale(1) translateY(0); }
+}
+.splash-icon {
+  font-size: 80px;
+  filter: drop-shadow(0 8px 32px rgba(212,150,10,.5));
+  animation: bookFloat 3s ease-in-out infinite;
+}
+@keyframes bookFloat {
+  0%,100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-10px) rotate(2deg); }
+}
+.splash-title {
+  font-family: 'Nanum Pen Script', cursive;
+  font-size: 64px;
+  color: #fff;
+  letter-spacing: 4px;
+  text-shadow: 0 2px 20px rgba(212,150,10,.4);
+}
+.splash-sub {
+  font-size: 14px;
+  color: rgba(255,255,255,.55);
+  letter-spacing: 2px;
+  font-weight: 300;
+}
+.splash-loader {
+  margin-top: 60px;
+  width: 48px; height: 3px;
+  background: rgba(255,255,255,.15);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.splash-loader::after {
+  content: '';
+  display: block;
+  height: 100%;
+  background: var(--gold-lt);
+  border-radius: 2px;
+  animation: load 2s ease forwards;
+}
+@keyframes load { from { width:0 } to { width:100% } }
+
+/* ─── SC-02 WELCOME ───────────────────────────────── */
+#sc-welcome {
+  background: var(--paper);
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: 0;
+}
+.welcome-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(212,150,10,.1) 0%, transparent 60%),
+    var(--paper);
+  z-index: 0;
+}
+.welcome-wrap {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 80px 32px 32px;
+}
+.welcome-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 40px;
+}
+.welcome-logo-icon { font-size: 32px; }
+.welcome-logo-text {
+  font-family: 'Nanum Pen Script', cursive;
+  font-size: 28px;
+  color: var(--teal-dk);
+}
+.welcome-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 420px;
+  margin: 0 auto;
+  width: 100%;
+}
+.welcome-greeting {
+  font-size: 30px;
+  font-weight: 900;
+  color: var(--text);
+  line-height: 1.4;
+  margin-bottom: 14px;
+  letter-spacing: -0.5px;
+}
+.welcome-greeting em {
+  color: var(--teal);
+  font-style: normal;
+}
+.welcome-sub {
+  font-size: 16px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 40px;
+  font-weight: 400;
+}
+.welcome-btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  background: var(--teal);
+  color: #fff;
+  border: none;
+  border-radius: var(--r-md);
+  padding: 18px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all .2s;
+  box-shadow: 0 6px 24px rgba(26,107,90,.3);
+}
+.welcome-btn-primary:active { transform: scale(.98); }
+.welcome-footer {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* ─── SC-03 NAME ──────────────────────────────────── */
+#sc-name {
+  background: var(--paper);
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: 0;
+}
+.form-header {
+  background: linear-gradient(135deg, var(--teal-dk) 0%, var(--teal) 100%);
+  padding: 48px 28px 32px;
+  color: #fff;
+}
+.form-progress {
+  display: flex; gap: 6px; margin-bottom: 20px;
+}
+.progress-seg {
+  flex: 1; height: 3px; border-radius: 2px;
+  background: rgba(255,255,255,.2);
+  transition: background .3s;
+}
+.progress-seg.done { background: var(--gold-lt); }
+.form-header h1 {
+  font-size: 24px;
+  font-weight: 900;
+  margin-bottom: 6px;
+}
+.form-header p {
+  font-size: 14px;
+  opacity: .75;
+  font-weight: 300;
+}
+.form-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.form-section label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.form-input {
+  width: 100%;
+  border: 2px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 16px;
+  font-size: 17px;
+  font-family: inherit;
+  color: var(--text);
+  background: #fff;
+  outline: none;
+  transition: all .2s;
+}
+.form-input:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 4px rgba(26,107,90,.1);
+}
+.info-tip {
+  background: var(--cream);
+  border-radius: var(--r-md);
+  padding: 14px 16px;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.7;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.info-tip-icon { flex-shrink: 0; font-size: 16px; }
+
+.form-footer {
+  padding: 16px 24px 32px;
+  background: var(--paper);
+  border-top: 1px solid var(--border);
+}
+.btn-primary {
+  width: 100%;
+  background: var(--teal);
+  color: #fff;
+  border: none;
+  border-radius: var(--r-md);
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all .2s;
+  box-shadow: 0 4px 20px rgba(26,107,90,.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-primary:active { transform: scale(.98); }
+.btn-primary:disabled {
+  background: var(--border);
+  color: var(--muted);
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: .7;
+}
+.btn-primary.loading {
+  pointer-events: none;
+  opacity: .75;
+}
+
+/* ─── SC-04 GRADE ─────────────────────────────────── */
+.grade-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.grade-btn {
+  border: 2px solid var(--border);
+  background: #fff;
+  border-radius: var(--r-md);
+  padding: 16px 4px;
+  text-align: center;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--muted);
+  transition: all .2s;
+}
+.grade-btn:active { transform: scale(.95); }
+.grade-btn.sel {
+  border-color: var(--teal);
+  background: var(--teal);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(26,107,90,.3);
+}
+
+/* ─── SC-05 DONE ──────────────────────────────────── */
+#sc-done {
+  background: linear-gradient(160deg, var(--teal-dk) 0%, #0d3d32 100%);
+  text-align: center;
+  gap: 20px;
+  padding: 40px 32px;
+}
+.done-icon {
+  font-size: 72px;
+  animation: popIn .6s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes popIn {
+  from { transform: scale(0) rotate(-20deg); opacity:0; }
+  to { transform: scale(1) rotate(0); opacity:1; }
+}
+.done-title {
+  font-size: 26px;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.4;
+}
+.done-sub {
+  font-size: 15px;
+  color: rgba(255,255,255,.7);
+  line-height: 1.7;
+  max-width: 320px;
+}
+.done-card {
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: var(--r-md);
+  padding: 18px 20px;
+  margin-top: 12px;
+  max-width: 320px;
+  width: 100%;
+}
+.done-card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  font-size: 14px;
+  color: rgba(255,255,255,.85);
+}
+.done-card-row .val {
+  font-weight: 700;
+  color: var(--gold-lt);
+}
+
+/* ─── TOAST ───────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 40px; left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--ink);
+  color: #fff;
+  border-radius: 50px;
+  padding: 12px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0;
+  transition: all .3s ease;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 300;
+  max-width: 90vw;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.toast.error { background: var(--rose); }
+
+/* ─── LOADING SPINNER ─────────────────────────────── */
+.spinner {
+  width: 18px; height: 18px;
+  border: 2.5px solid rgba(255,255,255,.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+  display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════
+     SC-01: SPLASH
+══════════════════════════════════════════════════ -->
+<div id="sc-splash" class="screen active">
+  <div class="splash-bg"></div>
+  <div class="splash-content">
+    <div class="splash-icon">📚</div>
+    <div class="splash-title">책벗</div>
+    <div class="splash-sub">AI 독서 동반 플랫폼</div>
+    <div class="splash-loader"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SC-02: WELCOME (v7.3 확정 인사 문구)
+══════════════════════════════════════════════════ -->
+<div id="sc-welcome" class="screen">
+  <div class="welcome-bg"></div>
+  <div class="welcome-wrap">
+    <div class="welcome-logo">
+      <div class="welcome-logo-icon">📚</div>
+      <div class="welcome-logo-text">책벗</div>
+    </div>
+    <div class="welcome-content">
+      <h1 class="welcome-greeting">안녕하세요,<br><em>책벗</em>입니다.<br>만나서 반갑습니다.</h1>
+      <p class="welcome-sub">
+        책 추천을 도와드릴까요?<br>
+        몇 가지만 알려주시면<br>
+        딱 맞는 책을 추천해드릴게요.
+      </p>
+      <button class="welcome-btn-primary" onclick="goScreen('sc-name')">
+        시작하기 →
+      </button>
+      <div class="welcome-footer">
+        전국교직원복지연대 × 문해Lab<br>
+        기획: Jonathan 선생님 · v2.0 Beta
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SC-03: NAME 입력
+══════════════════════════════════════════════════ -->
+<div id="sc-name" class="screen">
+  <div class="form-header">
+    <div class="form-progress">
+      <div class="progress-seg done"></div>
+      <div class="progress-seg"></div>
+    </div>
+    <h1>반가워요 👋</h1>
+    <p>책벗에서 쓸 이름을 알려주세요</p>
+  </div>
+  <div class="form-body">
+    <div class="form-section">
+      <label>이름 · 닉네임</label>
+      <input class="form-input" id="inp-name" type="text" placeholder="예: 민준, 독서왕, 책벌레" maxlength="10" autocomplete="off">
+    </div>
+    <div class="info-tip">
+      <span class="info-tip-icon">💡</span>
+      <span>본명 대신 닉네임을 써도 괜찮아요. 다른 친구들에게는 보이지 않으니까 편하게 써주세요!</span>
+    </div>
+  </div>
+  <div class="form-footer">
+    <button class="btn-primary" id="btnNameNext" onclick="goToGrade()" disabled>
+      다음 →
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SC-04: GRADE 선택 (v7.5 확정: 초3~중3, 성인)
+══════════════════════════════════════════════════ -->
+<div id="sc-grade" class="screen">
+  <div class="form-header">
+    <div class="form-progress">
+      <div class="progress-seg done"></div>
+      <div class="progress-seg done"></div>
+    </div>
+    <h1>학년이 어떻게 되세요? 🎒</h1>
+    <p>학년에 맞는 책을 추천해드릴게요</p>
+  </div>
+  <div class="form-body">
+    <div class="form-section">
+      <label>학년 선택</label>
+      <div class="grade-grid">
+        <button class="grade-btn" onclick="selectGrade('초3')">초3</button>
+        <button class="grade-btn" onclick="selectGrade('초4')">초4</button>
+        <button class="grade-btn" onclick="selectGrade('초5')">초5</button>
+        <button class="grade-btn" onclick="selectGrade('초6')">초6</button>
+        <button class="grade-btn" onclick="selectGrade('중1')">중1</button>
+        <button class="grade-btn" onclick="selectGrade('중2')">중2</button>
+        <button class="grade-btn" onclick="selectGrade('중3')">중3</button>
+        <button class="grade-btn" onclick="selectGrade('성인')">성인</button>
+      </div>
+    </div>
+    <div class="info-tip">
+      <span class="info-tip-icon">📚</span>
+      <span>초등학생도, 중학생도, 선생님도, 학부모님도 모두 환영해요!</span>
+    </div>
+  </div>
+  <div class="form-footer">
+    <button class="btn-primary" id="btnGradeNext" onclick="saveProfile()" disabled>
+      책벗 시작하기 🚀
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SC-05: DONE (STEP 2-1A 완료)
+══════════════════════════════════════════════════ -->
+<div id="sc-done" class="screen">
+  <div class="done-icon">🎉</div>
+  <div class="done-title">
+    <span id="done-name">독자</span>님,<br>환영합니다!
+  </div>
+  <div class="done-sub">
+    프로필이 성공적으로 저장됐어요.<br>
+    이제 책벗과 함께 독서 여정을 시작해요!
+  </div>
+  <div class="done-card">
+    <div class="done-card-row">
+      <span>이름</span>
+      <span class="val" id="done-name-val">-</span>
+    </div>
+    <div class="done-card-row">
+      <span>학년</span>
+      <span class="val" id="done-grade-val">-</span>
+    </div>
+    <div class="done-card-row">
+      <span>상태</span>
+      <span class="val">✅ DB 저장 완료</span>
+    </div>
+  </div>
+  <div style="margin-top: 30px; padding: 16px; background: rgba(255,255,255,.05); border-radius: 12px; max-width: 320px; font-size: 13px; color: rgba(255,255,255,.6); line-height: 1.6; text-align: left;">
+    💡 <strong style="color: var(--gold-lt);">다음 단계 (STEP 2-1B)</strong><br>
+    취향 인터뷰 4단계 (독서취향·관심분야 10개·독서경험)가 추가될 예정이에요.
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════
+   ⚠️ SUPABASE 설정  ← Jonathan 선생님이 바꿀 곳
+═══════════════════════════════════════════════════ */
+const SUPABASE_URL      = 'https://uloxboonhirucyvohzft.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_Glvbjfm0QKuh0Z-lv7LmzA_AiGpvw0q'; // ⬅️ 이 부분만 교체!
+
+/* ═══════════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════════ */
+const state = {
+  name: '',
+  grade: '',
+  userId: null,        // Supabase users.id
+  authId: null,        // Supabase auth.uid()
+};
+
+/* ═══════════════════════════════════════════════════
+   SUPABASE CLIENT INIT
+═══════════════════════════════════════════════════ */
+let supabase = null;
+try {
+  if (SUPABASE_ANON_KEY && SUPABASE_ANON_KEY !== 'PASTE_YOUR_ANON_KEY_HERE') {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    console.log('✅ Supabase client initialized');
+  } else {
+    console.warn('⚠️ SUPABASE_ANON_KEY not set. App will run in demo mode.');
+  }
+} catch (e) {
+  console.error('❌ Supabase init failed:', e);
+}
+
+/* ═══════════════════════════════════════════════════
+   LOCAL PERSISTENCE (세션 유지)
+═══════════════════════════════════════════════════ */
+function saveLocal() {
+  try { localStorage.setItem('cb_state', JSON.stringify(state)); } catch(e) {}
+}
+function loadLocal() {
+  try {
+    const s = localStorage.getItem('cb_state');
+    if (s) { Object.assign(state, JSON.parse(s)); return true; }
+  } catch(e) {}
+  return false;
+}
+
+/* ═══════════════════════════════════════════════════
+   SCREEN NAVIGATION
+═══════════════════════════════════════════════════ */
+let currentScreen = 'sc-splash';
+function goScreen(id) {
+  const cur = document.getElementById(currentScreen);
+  const next = document.getElementById(id);
+  if (!next || id === currentScreen) return;
+  cur.classList.add('exit-up');
+  setTimeout(() => {
+    cur.classList.remove('active', 'exit-up');
+    next.classList.add('active');
+    currentScreen = id;
+  }, 350);
+}
+
+/* ═══════════════════════════════════════════════════
+   SPLASH → WELCOME (or HOME for returning users)
+═══════════════════════════════════════════════════ */
+async function initApp() {
+  const hasSaved = loadLocal();
+
+  // Returning user - already completed onboarding
+  if (hasSaved && state.name && state.grade && state.userId) {
+    setTimeout(() => {
+      // Show done screen with their data (STEP 2-1A 완료 상태)
+      goScreen('sc-done');
+      updateDoneScreen();
+    }, 2400);
+    return;
+  }
+
+  // New user - show welcome
+  setTimeout(() => {
+    goScreen('sc-welcome');
+  }, 2400);
+}
+initApp();
+
+/* ═══════════════════════════════════════════════════
+   NAME INPUT VALIDATION
+═══════════════════════════════════════════════════ */
+document.getElementById('inp-name').addEventListener('input', function() {
+  const val = this.value.trim();
+  document.getElementById('btnNameNext').disabled = val.length < 1;
+});
+
+document.getElementById('inp-name').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter' && this.value.trim().length >= 1) {
+    goToGrade();
+  }
+});
+
+function goToGrade() {
+  const name = document.getElementById('inp-name').value.trim();
+  if (!name) return;
+  state.name = name;
+  saveLocal();
+  goScreen('sc-grade');
+}
+
+/* ═══════════════════════════════════════════════════
+   GRADE SELECTION
+═══════════════════════════════════════════════════ */
+function selectGrade(g) {
+  state.grade = g;
+  document.querySelectorAll('.grade-btn').forEach(b => {
+    b.classList.toggle('sel', b.textContent === g);
+  });
+  document.getElementById('btnGradeNext').disabled = false;
+  saveLocal();
+}
+
+/* ═══════════════════════════════════════════════════
+   SAVE TO SUPABASE — 핵심!
+═══════════════════════════════════════════════════ */
+async function saveProfile() {
+  if (!state.name || !state.grade) {
+    showToast('❌ 이름과 학년을 모두 입력해주세요', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('btnGradeNext');
+  btn.classList.add('loading');
+  btn.innerHTML = '<span class="spinner"></span> 저장 중...';
+
+  // Supabase가 없으면 데모 모드로 진행 (로컬 저장만)
+  if (!supabase) {
+    console.warn('Demo mode: skipping Supabase save');
+    state.userId = 'demo-' + Date.now();
+    state.authId = 'demo-auth';
+    saveLocal();
+    setTimeout(() => {
+      showToast('⚠️ 데모 모드 — API 키 설정이 필요해요');
+      goScreen('sc-done');
+      updateDoneScreen();
+    }, 800);
+    return;
+  }
+
+  try {
+    // 1단계: Anonymous Auth로 로그인 세션 생성
+    console.log('Step 1: Creating anonymous auth session...');
+    const { data: authData, error: authError } = await supabase.auth.signInAnonymously();
+    if (authError) throw new Error('Auth: ' + authError.message);
+    
+    state.authId = authData.user.id;
+    console.log('✅ Auth created:', state.authId);
+
+    // 2단계: users 테이블에 프로필 저장
+    console.log('Step 2: Inserting user profile...');
+    const { data: userData, error: insertError } = await supabase
+      .from('users')
+      .insert({
+        name: state.name,
+        grade: state.grade,
+        reading_level: 'mid',  // STEP 2-1B에서 설정 예정
+        role: 'student',
+        auth_id: state.authId,
+      })
+      .select()
+      .single();
+
+    if (insertError) throw new Error('Insert: ' + insertError.message);
+
+    state.userId = userData.id;
+    saveLocal();
+
+    console.log('✅ Profile saved:', userData);
+    showToast('✅ 프로필이 저장됐어요!');
+
+    setTimeout(() => {
+      goScreen('sc-done');
+      updateDoneScreen();
+    }, 600);
+
+  } catch (err) {
+    console.error('❌ Save failed:', err);
+    btn.classList.remove('loading');
+    btn.innerHTML = '책벗 시작하기 🚀';
+    showToast('❌ 저장 실패: ' + err.message, 'error');
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   DONE SCREEN UPDATE
+═══════════════════════════════════════════════════ */
+function updateDoneScreen() {
+  document.getElementById('done-name').textContent = state.name || '독자';
+  document.getElementById('done-name-val').textContent = state.name || '-';
+  document.getElementById('done-grade-val').textContent = state.grade || '-';
+}
+
+/* ═══════════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════════ */
+let toastTimer;
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type === 'error' ? ' error' : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.className = 'toast', 3000);
+}
+</script>
+</body>
+</html>
