@@ -608,7 +608,7 @@ html, body {
    ⚠️ SUPABASE 설정  ← Jonathan 선생님이 바꿀 곳
 ═══════════════════════════════════════════════════ */
 const SUPABASE_URL      = 'https://uloxboonhirucyvohzft.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsb3hib29uaGlydWN5dm9oemZ0Iiwicm9sZSI6ImFub24iLCJpYXQiOj'; // ⬅️ eyJ로 시작하는 anon key로 교체!
+const SUPABASE_ANON_KEY = 'sb_publishable_Glvbjfm0QKuh0Z-lv7LmzA_AiGpvw0q'; // ⬅️ eyJ로 시작하는 anon key로 교체!
 
 /* ═══════════════════════════════════════════════════
    STATE
@@ -626,7 +626,7 @@ const state = {
 ═══════════════════════════════════════════════════ */
 let sb = null;
 try {
-  if (SUPABASE_ANON_KEY && SUPABASE_ANON_KEY.startsWith('eyJ')) {
+  if (SUPABASE_ANON_KEY && SUPABASE_ANON_KEY.startsWith('sb_')) {
     sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     console.log('✅ Supabase client initialized');
   } else {
