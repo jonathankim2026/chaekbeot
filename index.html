@@ -626,7 +626,7 @@ const state = {
 ═══════════════════════════════════════════════════ */
 let sb = null;
 try {
-  if (SUPABASE_ANON_KEY && SUPABASE_ANON_KEY !== 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsb3hib29uaGlydWN5dm9oemZ0Iiwicm9sZSI6ImFub24iLCJpYXQiOj') {
+  if (SUPABASE_ANON_KEY && SUPABASE_ANON_KEY.startsWith('eyJ')) {
     sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     console.log('✅ Supabase client initialized');
   } else {
