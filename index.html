@@ -11,7 +11,7 @@
 
 <style>
 /* ═══════════════════════════════════════════════════════
-   책벗 베타 v2.0  —  STEP 2-1A
+   책벗 베타 v2.0  —  STEP 2-1A (버그 수정판)
    온보딩: 스플래시 → 환영 → 이름·학년 → Supabase 저장
 ═══════════════════════════════════════════════════════ */
 
@@ -409,6 +409,17 @@ html, body {
   font-weight: 700;
   color: var(--gold-lt);
 }
+.done-reset-btn {
+  margin-top: 20px;
+  background: transparent;
+  color: rgba(255,255,255,.5);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 50px;
+  padding: 8px 18px;
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+}
 
 /* ─── TOAST ───────────────────────────────────────── */
 .toast {
@@ -586,6 +597,7 @@ html, body {
     💡 <strong style="color: var(--gold-lt);">다음 단계 (STEP 2-1B)</strong><br>
     취향 인터뷰 4단계 (독서취향·관심분야 10개·독서경험)가 추가될 예정이에요.
   </div>
+  <button class="done-reset-btn" onclick="resetAll()">🗑️ 테스트용 초기화</button>
 </div>
 
 <!-- TOAST -->
@@ -596,7 +608,7 @@ html, body {
    ⚠️ SUPABASE 설정  ← Jonathan 선생님이 바꿀 곳
 ═══════════════════════════════════════════════════ */
 const SUPABASE_URL      = 'https://uloxboonhirucyvohzft.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsb3hib29uaGlydWN5dm9oemZ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0ODY5NzMsImV4cCI6MjA5MjA2Mjk3M30.DLhcPMDbMPWMBBzDsAsQ8vwn-8d3e3BPV1JcNU865-U'; // ⬅️ 이 부분만 교체!
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsb3hib29uaGlydWN5dm9oemZ0Iiwicm9sZSI6ImFub24iLCJpYXQiOj'; // ⬅️ eyJ로 시작하는 anon key로 교체!
 
 /* ═══════════════════════════════════════════════════
    STATE
@@ -610,11 +622,12 @@ const state = {
 
 /* ═══════════════════════════════════════════════════
    SUPABASE CLIENT INIT
+   ⚠️ 변수명 'sb' 사용 (window.supabase와 충돌 방지)
 ═══════════════════════════════════════════════════ */
-let supabase = null;
+let sb = null;
 try {
-  if (SUPABASE_ANON_KEY && SUPABASE_ANON_KEY !== 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsb3hib29uaGlydWN5dm9oemZ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0ODY5NzMsImV4cCI6MjA5MjA2Mjk3M30.DLhcPMDbMPWMBBzDsAsQ8vwn-8d3e3BPV1JcNU865-U') {
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  if (SUPABASE_ANON_KEY && SUPABASE_ANON_KEY !== 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsb3hib29uaGlydWN5dm9oemZ0Iiwicm9sZSI6ImFub24iLCJpYXQiOj') {
+    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     console.log('✅ Supabase client initialized');
   } else {
     console.warn('⚠️ SUPABASE_ANON_KEY not set. App will run in demo mode.');
@@ -654,7 +667,7 @@ function goScreen(id) {
 }
 
 /* ═══════════════════════════════════════════════════
-   SPLASH → WELCOME (or HOME for returning users)
+   SPLASH → WELCOME (or DONE for returning users)
 ═══════════════════════════════════════════════════ */
 async function initApp() {
   const hasSaved = loadLocal();
@@ -662,7 +675,6 @@ async function initApp() {
   // Returning user - already completed onboarding
   if (hasSaved && state.name && state.grade && state.userId) {
     setTimeout(() => {
-      // Show done screen with their data (STEP 2-1A 완료 상태)
       goScreen('sc-done');
       updateDoneScreen();
     }, 2400);
@@ -724,7 +736,7 @@ async function saveProfile() {
   btn.innerHTML = '<span class="spinner"></span> 저장 중...';
 
   // Supabase가 없으면 데모 모드로 진행 (로컬 저장만)
-  if (!supabase) {
+  if (!sb) {
     console.warn('Demo mode: skipping Supabase save');
     state.userId = 'demo-' + Date.now();
     state.authId = 'demo-auth';
@@ -740,7 +752,7 @@ async function saveProfile() {
   try {
     // 1단계: Anonymous Auth로 로그인 세션 생성
     console.log('Step 1: Creating anonymous auth session...');
-    const { data: authData, error: authError } = await supabase.auth.signInAnonymously();
+    const { data: authData, error: authError } = await sb.auth.signInAnonymously();
     if (authError) throw new Error('Auth: ' + authError.message);
     
     state.authId = authData.user.id;
@@ -748,7 +760,7 @@ async function saveProfile() {
 
     // 2단계: users 테이블에 프로필 저장
     console.log('Step 2: Inserting user profile...');
-    const { data: userData, error: insertError } = await supabase
+    const { data: userData, error: insertError } = await sb
       .from('users')
       .insert({
         name: state.name,
@@ -788,6 +800,25 @@ function updateDoneScreen() {
   document.getElementById('done-name').textContent = state.name || '독자';
   document.getElementById('done-name-val').textContent = state.name || '-';
   document.getElementById('done-grade-val').textContent = state.grade || '-';
+}
+
+/* ═══════════════════════════════════════════════════
+   RESET (테스트용)
+═══════════════════════════════════════════════════ */
+async function resetAll() {
+  if (!confirm('정말 초기화하시겠어요?\n(로컬 데이터만 삭제됩니다. Supabase에 저장된 데이터는 남아있어요.)')) return;
+  
+  // Supabase 로그아웃
+  if (sb) {
+    try { await sb.auth.signOut(); } catch(e) {}
+  }
+  
+  // 로컬 상태 초기화
+  localStorage.clear();
+  Object.assign(state, { name:'', grade:'', userId:null, authId:null });
+  
+  showToast('🗑️ 초기화됐어요. 새로고침합니다...');
+  setTimeout(() => location.reload(), 800);
 }
 
 /* ═══════════════════════════════════════════════════
