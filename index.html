@@ -6,13 +6,13 @@
 <title>📚 책벗</title>
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 
-<!-- Supabase JS Client (통역사 역할) -->
+<!-- Supabase JS Client -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 /* ═══════════════════════════════════════════════════════
-   책벗 베타 v2.0  —  STEP 2-1A (버그 수정판)
-   온보딩: 스플래시 → 환영 → 이름·학년 → Supabase 저장
+   책벗 베타 v2.1  —  STEP 2-1B (취향 인터뷰 완성판)
+   온보딩: 스플래시 → 환영 → 이름·학년 → 취향 → 관심 → 경험 → 저장
 ═══════════════════════════════════════════════════════ */
 
 :root {
@@ -80,185 +80,175 @@ html, body {
 .splash-bg::before {
   content: '';
   position: absolute; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='60' height='60' fill='none'/%3E%3Ccircle cx='30' cy='30' r='1' fill='rgba(255,255,255,0.04)'/%3E%3C/svg%3E");
-  background-size: 60px 60px;
+  background-image:
+    radial-gradient(circle at 25% 30%, rgba(255,255,255,.03) 1px, transparent 2px),
+    radial-gradient(circle at 70% 60%, rgba(255,255,255,.02) 1px, transparent 2px);
+  background-size: 80px 80px, 120px 120px;
 }
 .splash-content {
   position: relative;
-  display: flex; flex-direction: column;
-  align-items: center; gap: 20px;
-  animation: splashReveal 1.2s cubic-bezier(.16,1,.3,1) forwards;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  z-index: 2;
 }
-@keyframes splashReveal {
-  from { opacity:0; transform: scale(.85) translateY(20px); }
-  to   { opacity:1; transform: scale(1) translateY(0); }
+.splash-logo {
+  font-size: 72px;
+  animation: splashBounce 1.2s cubic-bezier(.34,1.56,.64,1);
 }
-.splash-icon {
-  font-size: 80px;
-  filter: drop-shadow(0 8px 32px rgba(212,150,10,.5));
-  animation: bookFloat 3s ease-in-out infinite;
-}
-@keyframes bookFloat {
-  0%,100% { transform: translateY(0) rotate(-2deg); }
-  50% { transform: translateY(-10px) rotate(2deg); }
+@keyframes splashBounce {
+  0% { transform: scale(0) rotate(-20deg); opacity: 0; }
+  60% { transform: scale(1.15) rotate(5deg); }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
 }
 .splash-title {
-  font-family: 'Nanum Pen Script', cursive;
-  font-size: 64px;
+  font-size: 42px;
+  font-weight: 900;
   color: #fff;
-  letter-spacing: 4px;
-  text-shadow: 0 2px 20px rgba(212,150,10,.4);
+  letter-spacing: -1px;
 }
 .splash-sub {
-  font-size: 14px;
-  color: rgba(255,255,255,.55);
-  letter-spacing: 2px;
-  font-weight: 300;
+  font-family: 'Nanum Pen Script', cursive;
+  font-size: 22px;
+  color: var(--gold-lt);
+  margin-top: -6px;
 }
-.splash-loader {
-  margin-top: 60px;
-  width: 48px; height: 3px;
+.splash-loading {
+  margin-top: 32px;
+  width: 100px;
+  height: 3px;
   background: rgba(255,255,255,.15);
-  border-radius: 2px;
+  border-radius: 3px;
   overflow: hidden;
 }
-.splash-loader::after {
+.splash-loading::after {
   content: '';
   display: block;
+  width: 40%;
   height: 100%;
   background: var(--gold-lt);
-  border-radius: 2px;
-  animation: load 2s ease forwards;
+  border-radius: 3px;
+  animation: loadingBar 1.6s ease-in-out infinite;
 }
-@keyframes load { from { width:0 } to { width:100% } }
+@keyframes loadingBar {
+  0%, 100% { transform: translateX(-100%); }
+  50% { transform: translateX(250%); }
+}
 
 /* ─── SC-02 WELCOME ───────────────────────────────── */
 #sc-welcome {
   background: var(--paper);
-  align-items: stretch;
-  justify-content: flex-start;
-  padding: 0;
-}
-.welcome-bg {
-  position: absolute; inset: 0;
-  background:
-    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(212,150,10,.1) 0%, transparent 60%),
-    var(--paper);
-  z-index: 0;
-}
-.welcome-wrap {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 80px 32px 32px;
+  padding: 40px 32px;
+  gap: 0;
 }
 .welcome-logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 40px;
+  font-size: 84px;
+  margin-bottom: 12px;
+  animation: gentleBob 3s ease-in-out infinite;
 }
-.welcome-logo-icon { font-size: 32px; }
-.welcome-logo-text {
-  font-family: 'Nanum Pen Script', cursive;
+@keyframes gentleBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.welcome-title {
   font-size: 28px;
-  color: var(--teal-dk);
-}
-.welcome-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  max-width: 420px;
-  margin: 0 auto;
-  width: 100%;
-}
-.welcome-greeting {
-  font-size: 30px;
   font-weight: 900;
-  color: var(--text);
+  color: var(--ink);
+  text-align: center;
   line-height: 1.4;
-  margin-bottom: 14px;
-  letter-spacing: -0.5px;
+  margin-bottom: 12px;
 }
-.welcome-greeting em {
-  color: var(--teal);
-  font-style: normal;
-}
+.welcome-title .accent { color: var(--teal); }
 .welcome-sub {
-  font-size: 16px;
+  font-family: 'Nanum Pen Script', cursive;
+  font-size: 22px;
   color: var(--muted);
-  line-height: 1.7;
-  margin-bottom: 40px;
-  font-weight: 400;
+  text-align: center;
+  margin-bottom: 36px;
 }
-.welcome-btn-primary {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
+.welcome-desc {
+  background: #fff;
+  border-radius: var(--r-lg);
+  padding: 24px 22px;
+  box-shadow: 0 4px 16px var(--shadow);
+  max-width: 340px;
+  text-align: center;
+  margin-bottom: 32px;
+}
+.welcome-desc p {
+  font-size: 15px;
+  color: var(--text);
+  line-height: 1.8;
+}
+.welcome-desc strong { color: var(--teal); font-weight: 700; }
+.welcome-btn {
   background: var(--teal);
   color: #fff;
   border: none;
-  border-radius: var(--r-md);
-  padding: 18px;
-  font-size: 16px;
+  border-radius: 50px;
+  padding: 16px 36px;
+  font-size: 17px;
   font-weight: 700;
   font-family: inherit;
   cursor: pointer;
+  box-shadow: 0 6px 20px rgba(26,107,90,.3);
   transition: all .2s;
-  box-shadow: 0 6px 24px rgba(26,107,90,.3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
-.welcome-btn-primary:active { transform: scale(.98); }
+.welcome-btn:active { transform: scale(.96); }
 .welcome-footer {
+  position: absolute; bottom: 28px;
+  font-size: 12px; color: var(--muted);
   text-align: center;
-  margin-top: 24px;
-  font-size: 12px;
-  color: var(--muted);
-  line-height: 1.6;
 }
 
-/* ─── SC-03 NAME ──────────────────────────────────── */
-#sc-name {
+/* ─── ONBOARDING FORM (공통) ──────────────────────── */
+.form-screen {
   background: var(--paper);
-  align-items: stretch;
   justify-content: flex-start;
   padding: 0;
 }
 .form-header {
-  background: linear-gradient(135deg, var(--teal-dk) 0%, var(--teal) 100%);
-  padding: 48px 28px 32px;
-  color: #fff;
+  width: 100%;
+  padding: 32px 28px 20px;
 }
 .form-progress {
-  display: flex; gap: 6px; margin-bottom: 20px;
+  display: flex;
+  gap: 6px;
+  margin-bottom: 20px;
 }
 .progress-seg {
-  flex: 1; height: 3px; border-radius: 2px;
-  background: rgba(255,255,255,.2);
+  flex: 1;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
   transition: background .3s;
 }
-.progress-seg.done { background: var(--gold-lt); }
+.progress-seg.done { background: var(--teal); }
 .form-header h1 {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 900;
+  color: var(--ink);
+  letter-spacing: -.5px;
+  line-height: 1.35;
   margin-bottom: 6px;
 }
 .form-header p {
+  color: var(--muted);
   font-size: 14px;
-  opacity: .75;
-  font-weight: 300;
+  line-height: 1.6;
 }
 .form-body {
   flex: 1;
+  width: 100%;
+  padding: 12px 28px;
   overflow-y: auto;
-  padding: 32px 24px;
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 24px;
 }
 .form-section label {
   display: block;
@@ -299,12 +289,29 @@ html, body {
 .info-tip-icon { flex-shrink: 0; font-size: 16px; }
 
 .form-footer {
+  width: 100%;
   padding: 16px 24px 32px;
   background: var(--paper);
   border-top: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
 }
+.btn-back {
+  background: #fff;
+  color: var(--muted);
+  border: 2px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 16px 22px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all .2s;
+  flex-shrink: 0;
+}
+.btn-back:active { transform: scale(.96); }
 .btn-primary {
-  width: 100%;
+  flex: 1;
   background: var(--teal);
   color: #fff;
   border: none;
@@ -334,7 +341,7 @@ html, body {
   opacity: .75;
 }
 
-/* ─── SC-04 GRADE ─────────────────────────────────── */
+/* ─── GRADE GRID ─────────────────────────────────── */
 .grade-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -361,7 +368,92 @@ html, body {
   box-shadow: 0 4px 12px rgba(26,107,90,.3);
 }
 
-/* ─── SC-05 DONE ──────────────────────────────────── */
+/* ─── TASTE CARDS (SC-04 독서 취향) ────────────────── */
+.taste-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.taste-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  border: 2px solid var(--border);
+  background: #fff;
+  border-radius: var(--r-md);
+  padding: 18px 20px;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all .2s;
+}
+.taste-card:active { transform: scale(.98); }
+.taste-card.sel {
+  border-color: var(--teal);
+  background: rgba(26,107,90,.05);
+  box-shadow: 0 4px 12px rgba(26,107,90,.15);
+}
+.taste-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+.taste-content {
+  flex: 1;
+}
+.taste-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.3;
+  margin-bottom: 2px;
+}
+.taste-desc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+.taste-card.sel .taste-title { color: var(--teal-dk); }
+.taste-card.sel .taste-desc { color: var(--teal); }
+
+/* ─── INTEREST GRID (SC-05 관심 분야) ──────────────── */
+.interest-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+.interest-btn {
+  border: 2px solid var(--border);
+  background: #fff;
+  border-radius: var(--r-md);
+  padding: 14px 10px;
+  text-align: center;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  transition: all .2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.interest-btn:active { transform: scale(.95); }
+.interest-btn.sel {
+  border-color: var(--teal);
+  background: var(--teal);
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(26,107,90,.3);
+}
+.interest-icon { font-size: 20px; }
+.interest-custom-wrap {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px dashed var(--border);
+}
+
+/* ─── SC-07 DONE ─────────────────────────────────── */
 #sc-done {
   background: linear-gradient(160deg, var(--teal-dk) 0%, #0d3d32 100%);
   text-align: center;
@@ -394,20 +486,24 @@ html, body {
   border-radius: var(--r-md);
   padding: 18px 20px;
   margin-top: 12px;
-  max-width: 320px;
+  max-width: 340px;
   width: 100%;
 }
 .done-card-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   padding: 6px 0;
   font-size: 14px;
   color: rgba(255,255,255,.85);
+  gap: 10px;
 }
 .done-card-row .val {
   font-weight: 700;
   color: var(--gold-lt);
+  text-align: right;
+  max-width: 60%;
+  word-break: keep-all;
 }
 .done-reset-btn {
   margin-top: 20px;
@@ -465,83 +561,58 @@ html, body {
 <div id="sc-splash" class="screen active">
   <div class="splash-bg"></div>
   <div class="splash-content">
-    <div class="splash-icon">📚</div>
+    <div class="splash-logo">📚</div>
     <div class="splash-title">책벗</div>
     <div class="splash-sub">AI 독서 동반 플랫폼</div>
-    <div class="splash-loader"></div>
+    <div class="splash-loading"></div>
   </div>
 </div>
 
 <!-- ══════════════════════════════════════════════════
-     SC-02: WELCOME (v7.3 확정 인사 문구)
+     SC-02: WELCOME
 ══════════════════════════════════════════════════ -->
 <div id="sc-welcome" class="screen">
-  <div class="welcome-bg"></div>
-  <div class="welcome-wrap">
-    <div class="welcome-logo">
-      <div class="welcome-logo-icon">📚</div>
-      <div class="welcome-logo-text">책벗</div>
-    </div>
-    <div class="welcome-content">
-      <h1 class="welcome-greeting">안녕하세요,<br><em>책벗</em>입니다.<br>만나서 반갑습니다.</h1>
-      <p class="welcome-sub">
-        책 추천을 도와드릴까요?<br>
-        몇 가지만 알려주시면<br>
-        딱 맞는 책을 추천해드릴게요.
-      </p>
-      <button class="welcome-btn-primary" onclick="goScreen('sc-name')">
-        시작하기 →
-      </button>
-      <div class="welcome-footer">
-        전국교직원복지연대 × 문해Lab<br>
-        기획: Jonathan 선생님 · v2.0 Beta
-      </div>
-    </div>
+  <div class="welcome-logo">📖</div>
+  <div class="welcome-title">
+    안녕하세요, <span class="accent">반갑습니다</span>.<br>
+    책 소개를 도와드릴까요?
+  </div>
+  <div class="welcome-sub">몇 가지만 알려주시면 딱 맞는 책을 찾아드릴게요</div>
+  <div class="welcome-desc">
+    <p>
+      <strong>책벗</strong>은 AI와 함께하는<br>
+      독서 동반 플랫폼입니다.<br><br>
+      이름과 학년, 취향을 알려주시면<br>
+      딱 맞는 책을 추천해드려요.
+    </p>
+  </div>
+  <button class="welcome-btn" onclick="startOnboarding()">
+    시작하기 →
+  </button>
+  <div class="welcome-footer">
+    © 2026 책벗 · 전국교직원복지연대
   </div>
 </div>
 
 <!-- ══════════════════════════════════════════════════
-     SC-03: NAME 입력
+     SC-03: NAME + GRADE (통합 화면 - 기본 정보)
 ══════════════════════════════════════════════════ -->
-<div id="sc-name" class="screen">
+<div id="sc-basic" class="screen form-screen">
   <div class="form-header">
     <div class="form-progress">
       <div class="progress-seg done"></div>
       <div class="progress-seg"></div>
+      <div class="progress-seg"></div>
+      <div class="progress-seg"></div>
     </div>
     <h1>반가워요 👋</h1>
-    <p>책벗에서 쓸 이름을 알려주세요</p>
+    <p>이름과 학년을 알려주세요</p>
   </div>
   <div class="form-body">
     <div class="form-section">
       <label>이름 · 닉네임</label>
       <input class="form-input" id="inp-name" type="text" placeholder="예: 민준, 독서왕, 책벌레" maxlength="10" autocomplete="off">
     </div>
-    <div class="info-tip">
-      <span class="info-tip-icon">💡</span>
-      <span>본명 대신 닉네임을 써도 괜찮아요. 다른 친구들에게는 보이지 않으니까 편하게 써주세요!</span>
-    </div>
-  </div>
-  <div class="form-footer">
-    <button class="btn-primary" id="btnNameNext" onclick="goToGrade()" disabled>
-      다음 →
-    </button>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════
-     SC-04: GRADE 선택 (v7.5 확정: 초3~중3, 성인)
-══════════════════════════════════════════════════ -->
-<div id="sc-grade" class="screen">
-  <div class="form-header">
-    <div class="form-progress">
-      <div class="progress-seg done"></div>
-      <div class="progress-seg done"></div>
-    </div>
-    <h1>학년이 어떻게 되세요? 🎒</h1>
-    <p>학년에 맞는 책을 추천해드릴게요</p>
-  </div>
-  <div class="form-body">
     <div class="form-section">
       <label>학년 선택</label>
       <div class="grade-grid">
@@ -556,19 +627,197 @@ html, body {
       </div>
     </div>
     <div class="info-tip">
-      <span class="info-tip-icon">📚</span>
-      <span>초등학생도, 중학생도, 선생님도, 학부모님도 모두 환영해요!</span>
+      <span class="info-tip-icon">💡</span>
+      <span>본명 대신 닉네임을 써도 괜찮아요. 초등학생·중학생·선생님·학부모님 모두 환영해요!</span>
     </div>
   </div>
   <div class="form-footer">
-    <button class="btn-primary" id="btnGradeNext" onclick="saveProfile()" disabled>
+    <button class="btn-primary" id="btnBasicNext" onclick="goToTaste()" disabled>
+      다음 →
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SC-04: 독서 취향 (1개 선택)
+══════════════════════════════════════════════════ -->
+<div id="sc-taste" class="screen form-screen">
+  <div class="form-header">
+    <div class="form-progress">
+      <div class="progress-seg done"></div>
+      <div class="progress-seg done"></div>
+      <div class="progress-seg"></div>
+      <div class="progress-seg"></div>
+    </div>
+    <h1><span id="taste-name">독자</span>님은 어떤 독자이신가요?</h1>
+    <p>편하게 한 가지만 골라주세요 😊</p>
+  </div>
+  <div class="form-body">
+    <div class="form-section">
+      <div class="taste-list">
+        <button class="taste-card" onclick="selectTaste('narrative', this)">
+          <div class="taste-icon">📖</div>
+          <div class="taste-content">
+            <div class="taste-title">이야기 속으로 빠져드는 타입</div>
+            <div class="taste-desc">소설·동화·판타지 등 스토리를 좋아해요</div>
+          </div>
+        </button>
+        <button class="taste-card" onclick="selectTaste('knowledge', this)">
+          <div class="taste-icon">🔍</div>
+          <div class="taste-content">
+            <div class="taste-title">새로운 지식을 얻고 싶은 타입</div>
+            <div class="taste-desc">역사·과학·사회 등 정보책을 선호해요</div>
+          </div>
+        </button>
+        <button class="taste-card" onclick="selectTaste('thinking', this)">
+          <div class="taste-icon">💭</div>
+          <div class="taste-content">
+            <div class="taste-title">생각하고 질문하는 타입</div>
+            <div class="taste-desc">철학·에세이·관점을 나누는 책이 좋아요</div>
+          </div>
+        </button>
+        <button class="taste-card" onclick="selectTaste('any', this)">
+          <div class="taste-icon">😊</div>
+          <div class="taste-content">
+            <div class="taste-title">아무거나 재미있으면 됩니다</div>
+            <div class="taste-desc">장르 구분 없이 열린 마음이에요</div>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="form-footer">
+    <button class="btn-back" onclick="goBack('sc-basic')">← 이전</button>
+    <button class="btn-primary" id="btnTasteNext" onclick="goToInterest()" disabled>
+      다음 →
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SC-05: 관심 분야 (복수 선택 + 직접 입력)
+══════════════════════════════════════════════════ -->
+<div id="sc-interest" class="screen form-screen">
+  <div class="form-header">
+    <div class="form-progress">
+      <div class="progress-seg done"></div>
+      <div class="progress-seg done"></div>
+      <div class="progress-seg done"></div>
+      <div class="progress-seg"></div>
+    </div>
+    <h1>어떤 분야가 궁금하신가요?</h1>
+    <p>여러 개 선택할 수 있어요. 없으면 직접 입력해주세요.</p>
+  </div>
+  <div class="form-body">
+    <div class="form-section">
+      <div class="interest-grid">
+        <button class="interest-btn" onclick="toggleInterest('역사', this)">
+          <span class="interest-icon">🏛️</span>역사
+        </button>
+        <button class="interest-btn" onclick="toggleInterest('과학·자연', this)">
+          <span class="interest-icon">🔬</span>과학·자연
+        </button>
+        <button class="interest-btn" onclick="toggleInterest('모험·판타지', this)">
+          <span class="interest-icon">🗺️</span>모험·판타지
+        </button>
+        <button class="interest-btn" onclick="toggleInterest('우정·성장', this)">
+          <span class="interest-icon">👫</span>우정·성장
+        </button>
+        <button class="interest-btn" onclick="toggleInterest('사회·세계', this)">
+          <span class="interest-icon">🌍</span>사회·세계
+        </button>
+        <button class="interest-btn" onclick="toggleInterest('수학·논리', this)">
+          <span class="interest-icon">🔢</span>수학·논리
+        </button>
+        <button class="interest-btn" onclick="toggleInterest('예술·음악', this)">
+          <span class="interest-icon">🎨</span>예술·음악
+        </button>
+        <button class="interest-btn" onclick="toggleInterest('철학·생각', this)">
+          <span class="interest-icon">💭</span>철학·생각
+        </button>
+        <button class="interest-btn" onclick="toggleInterest('스포츠', this)">
+          <span class="interest-icon">⚽</span>스포츠
+        </button>
+        <button class="interest-btn" onclick="toggleInterest('동물·환경', this)">
+          <span class="interest-icon">🐾</span>동물·환경
+        </button>
+      </div>
+      <div class="interest-custom-wrap">
+        <label>✏️ 직접 입력 (선택사항)</label>
+        <input class="form-input" id="inp-custom" type="text" placeholder="예: 우주, 탐정, 로봇" maxlength="50" autocomplete="off">
+      </div>
+    </div>
+    <div class="info-tip">
+      <span class="info-tip-icon">💡</span>
+      <span>선택한 분야와 직접 입력한 관심사를 바탕으로 맞춤 책을 추천해드려요.</span>
+    </div>
+  </div>
+  <div class="form-footer">
+    <button class="btn-back" onclick="goBack('sc-taste')">← 이전</button>
+    <button class="btn-primary" id="btnInterestNext" onclick="goToLevel()" disabled>
+      다음 →
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SC-06: 독서 경험 (1개 선택)
+══════════════════════════════════════════════════ -->
+<div id="sc-level" class="screen form-screen">
+  <div class="form-header">
+    <div class="form-progress">
+      <div class="progress-seg done"></div>
+      <div class="progress-seg done"></div>
+      <div class="progress-seg done"></div>
+      <div class="progress-seg done"></div>
+    </div>
+    <h1>마지막이에요! 🎯</h1>
+    <p>책과 얼마나 친하신가요?</p>
+  </div>
+  <div class="form-body">
+    <div class="form-section">
+      <div class="taste-list">
+        <button class="taste-card" onclick="selectLevel('beginner', this)">
+          <div class="taste-icon">😅</div>
+          <div class="taste-content">
+            <div class="taste-title">책이랑 별로 친하지 않아요</div>
+            <div class="taste-desc">책이 낯설고 어렵게 느껴져요</div>
+          </div>
+        </button>
+        <button class="taste-card" onclick="selectLevel('casual', this)">
+          <div class="taste-icon">📚</div>
+          <div class="taste-content">
+            <div class="taste-title">가끔 읽어요</div>
+            <div class="taste-desc">관심 가는 책이 있으면 읽는 편이에요</div>
+          </div>
+        </button>
+        <button class="taste-card" onclick="selectLevel('regular', this)">
+          <div class="taste-icon">😊</div>
+          <div class="taste-content">
+            <div class="taste-title">즐겨 읽는 편이에요</div>
+            <div class="taste-desc">책 읽는 시간이 익숙하고 즐거워요</div>
+          </div>
+        </button>
+        <button class="taste-card" onclick="selectLevel('advanced', this)">
+          <div class="taste-icon">🌟</div>
+          <div class="taste-content">
+            <div class="taste-title">책이라면 자신 있어요</div>
+            <div class="taste-desc">두꺼운 책도 거뜬히 읽어요</div>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="form-footer">
+    <button class="btn-back" onclick="goBack('sc-interest')">← 이전</button>
+    <button class="btn-primary" id="btnLevelNext" onclick="saveProfile()" disabled>
       책벗 시작하기 🚀
     </button>
   </div>
 </div>
 
 <!-- ══════════════════════════════════════════════════
-     SC-05: DONE (STEP 2-1A 완료)
+     SC-07: DONE (프로필 저장 완료)
 ══════════════════════════════════════════════════ -->
 <div id="sc-done" class="screen">
   <div class="done-icon">🎉</div>
@@ -589,13 +838,25 @@ html, body {
       <span class="val" id="done-grade-val">-</span>
     </div>
     <div class="done-card-row">
+      <span>독서 취향</span>
+      <span class="val" id="done-taste-val">-</span>
+    </div>
+    <div class="done-card-row">
+      <span>관심 분야</span>
+      <span class="val" id="done-interests-val">-</span>
+    </div>
+    <div class="done-card-row">
+      <span>독서 경험</span>
+      <span class="val" id="done-level-val">-</span>
+    </div>
+    <div class="done-card-row">
       <span>상태</span>
       <span class="val">✅ DB 저장 완료</span>
     </div>
   </div>
-  <div style="margin-top: 30px; padding: 16px; background: rgba(255,255,255,.05); border-radius: 12px; max-width: 320px; font-size: 13px; color: rgba(255,255,255,.6); line-height: 1.6; text-align: left;">
-    💡 <strong style="color: var(--gold-lt);">다음 단계 (STEP 2-1B)</strong><br>
-    취향 인터뷰 4단계 (독서취향·관심분야 10개·독서경험)가 추가될 예정이에요.
+  <div style="margin-top: 24px; padding: 16px; background: rgba(255,255,255,.05); border-radius: 12px; max-width: 340px; font-size: 13px; color: rgba(255,255,255,.6); line-height: 1.6; text-align: left;">
+    💡 <strong style="color: var(--gold-lt);">다음 단계 (STEP 2-1C)</strong><br>
+    첫 책 추천과 홈 화면이 추가될 예정이에요.
   </div>
   <button class="done-reset-btn" onclick="resetAll()">🗑️ 테스트용 초기화</button>
 </div>
@@ -605,10 +866,10 @@ html, body {
 
 <script>
 /* ═══════════════════════════════════════════════════
-   ⚠️ SUPABASE 설정  ← Jonathan 선생님이 바꿀 곳
+   ⚠️ SUPABASE 설정  ← Jonathan 선생님의 기존 키 유지
 ═══════════════════════════════════════════════════ */
 const SUPABASE_URL      = 'https://uloxboonhirucyvohzft.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_Glvbjfm0QKuh0Z-lv7LmzA_AiGpvw0q'; // ⬅️ eyJ로 시작하는 anon key로 교체!
+const SUPABASE_ANON_KEY = 'sb_publishable_Glvbjfm0QKuh0Z-lv7LmzA_AiGpvw0q'; // ⬅️ sb_publishable_로 시작하는 키로 교체!
 
 /* ═══════════════════════════════════════════════════
    STATE
@@ -616,13 +877,16 @@ const SUPABASE_ANON_KEY = 'sb_publishable_Glvbjfm0QKuh0Z-lv7LmzA_AiGpvw0q'; // �
 const state = {
   name: '',
   grade: '',
-  userId: null,        // Supabase users.id
-  authId: null,        // Supabase auth.uid()
+  readingTaste: '',        // narrative / knowledge / thinking / any
+  interests: [],           // 배열: ['역사', '과학·자연']
+  interestsCustom: '',     // 직접 입력
+  readingLevel: '',        // beginner / casual / regular / advanced
+  userId: null,            // Supabase users.id
+  authId: null,            // Supabase auth.uid()
 };
 
 /* ═══════════════════════════════════════════════════
    SUPABASE CLIENT INIT
-   ⚠️ 변수명 'sb' 사용 (window.supabase와 충돌 방지)
 ═══════════════════════════════════════════════════ */
 let sb = null;
 try {
@@ -637,7 +901,7 @@ try {
 }
 
 /* ═══════════════════════════════════════════════════
-   LOCAL PERSISTENCE (세션 유지)
+   LOCAL PERSISTENCE
 ═══════════════════════════════════════════════════ */
 function saveLocal() {
   try { localStorage.setItem('cb_state', JSON.stringify(state)); } catch(e) {}
@@ -666,8 +930,12 @@ function goScreen(id) {
   }, 350);
 }
 
+function goBack(screenId) {
+  goScreen(screenId);
+}
+
 /* ═══════════════════════════════════════════════════
-   SPLASH → WELCOME (or DONE for returning users)
+   SPLASH → WELCOME
 ═══════════════════════════════════════════════════ */
 async function initApp() {
   const hasSaved = loadLocal();
@@ -688,54 +956,122 @@ async function initApp() {
 }
 initApp();
 
-/* ═══════════════════════════════════════════════════
-   NAME INPUT VALIDATION
-═══════════════════════════════════════════════════ */
-document.getElementById('inp-name').addEventListener('input', function() {
-  const val = this.value.trim();
-  document.getElementById('btnNameNext').disabled = val.length < 1;
-});
-
-document.getElementById('inp-name').addEventListener('keypress', function(e) {
-  if (e.key === 'Enter' && this.value.trim().length >= 1) {
-    goToGrade();
-  }
-});
-
-function goToGrade() {
-  const name = document.getElementById('inp-name').value.trim();
-  if (!name) return;
-  state.name = name;
-  saveLocal();
-  goScreen('sc-grade');
+function startOnboarding() {
+  goScreen('sc-basic');
 }
 
 /* ═══════════════════════════════════════════════════
-   GRADE SELECTION
+   SC-03: NAME + GRADE (통합)
 ═══════════════════════════════════════════════════ */
+document.getElementById('inp-name').addEventListener('input', function() {
+  state.name = this.value.trim();
+  validateBasic();
+});
+
 function selectGrade(g) {
   state.grade = g;
   document.querySelectorAll('.grade-btn').forEach(b => {
     b.classList.toggle('sel', b.textContent === g);
   });
-  document.getElementById('btnGradeNext').disabled = false;
+  validateBasic();
+  saveLocal();
+}
+
+function validateBasic() {
+  const ok = state.name.length >= 1 && state.grade !== '';
+  document.getElementById('btnBasicNext').disabled = !ok;
+}
+
+function goToTaste() {
+  if (!state.name || !state.grade) return;
+  saveLocal();
+  document.getElementById('taste-name').textContent = state.name;
+  goScreen('sc-taste');
+}
+
+/* ═══════════════════════════════════════════════════
+   SC-04: 독서 취향
+═══════════════════════════════════════════════════ */
+function selectTaste(taste, btn) {
+  state.readingTaste = taste;
+  document.querySelectorAll('#sc-taste .taste-card').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  document.getElementById('btnTasteNext').disabled = false;
+  saveLocal();
+}
+
+function goToInterest() {
+  if (!state.readingTaste) return;
+  // 기존 선택 복원
+  state.interests.forEach(interest => {
+    const btn = Array.from(document.querySelectorAll('#sc-interest .interest-btn'))
+      .find(b => b.textContent.trim().replace(/^\S+/, '').trim() === interest);
+    if (btn) btn.classList.add('sel');
+  });
+  if (state.interestsCustom) {
+    document.getElementById('inp-custom').value = state.interestsCustom;
+  }
+  validateInterest();
+  goScreen('sc-interest');
+}
+
+/* ═══════════════════════════════════════════════════
+   SC-05: 관심 분야 (복수 선택)
+═══════════════════════════════════════════════════ */
+function toggleInterest(interest, btn) {
+  const idx = state.interests.indexOf(interest);
+  if (idx >= 0) {
+    state.interests.splice(idx, 1);
+    btn.classList.remove('sel');
+  } else {
+    state.interests.push(interest);
+    btn.classList.add('sel');
+  }
+  validateInterest();
+  saveLocal();
+}
+
+document.getElementById('inp-custom').addEventListener('input', function() {
+  state.interestsCustom = this.value.trim();
+  validateInterest();
+});
+
+function validateInterest() {
+  // 복수선택 or 직접입력 중 하나만 있으면 진행 가능
+  const ok = state.interests.length > 0 || state.interestsCustom.length > 0;
+  document.getElementById('btnInterestNext').disabled = !ok;
+}
+
+function goToLevel() {
+  saveLocal();
+  goScreen('sc-level');
+}
+
+/* ═══════════════════════════════════════════════════
+   SC-06: 독서 경험
+═══════════════════════════════════════════════════ */
+function selectLevel(level, btn) {
+  state.readingLevel = level;
+  document.querySelectorAll('#sc-level .taste-card').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  document.getElementById('btnLevelNext').disabled = false;
   saveLocal();
 }
 
 /* ═══════════════════════════════════════════════════
-   SAVE TO SUPABASE — 핵심!
+   SAVE TO SUPABASE — 모든 취향 정보 포함
 ═══════════════════════════════════════════════════ */
 async function saveProfile() {
-  if (!state.name || !state.grade) {
-    showToast('❌ 이름과 학년을 모두 입력해주세요', 'error');
+  if (!state.name || !state.grade || !state.readingTaste || !state.readingLevel) {
+    showToast('❌ 모든 항목을 입력해주세요', 'error');
     return;
   }
 
-  const btn = document.getElementById('btnGradeNext');
+  const btn = document.getElementById('btnLevelNext');
   btn.classList.add('loading');
   btn.innerHTML = '<span class="spinner"></span> 저장 중...';
 
-  // Supabase가 없으면 데모 모드로 진행 (로컬 저장만)
+  // Supabase가 없으면 데모 모드
   if (!sb) {
     console.warn('Demo mode: skipping Supabase save');
     state.userId = 'demo-' + Date.now();
@@ -750,7 +1086,7 @@ async function saveProfile() {
   }
 
   try {
-    // 1단계: Anonymous Auth로 로그인 세션 생성
+    // 1단계: Anonymous Auth
     console.log('Step 1: Creating anonymous auth session...');
     const { data: authData, error: authError } = await sb.auth.signInAnonymously();
     if (authError) throw new Error('Auth: ' + authError.message);
@@ -758,14 +1094,17 @@ async function saveProfile() {
     state.authId = authData.user.id;
     console.log('✅ Auth created:', state.authId);
 
-    // 2단계: users 테이블에 프로필 저장
-    console.log('Step 2: Inserting user profile...');
+    // 2단계: users 테이블에 전체 프로필 저장 (STEP 2-1B 확장 필드 포함)
+    console.log('Step 2: Inserting full profile...');
     const { data: userData, error: insertError } = await sb
       .from('users')
       .insert({
         name: state.name,
         grade: state.grade,
-        reading_level: 'mid',  // STEP 2-1B에서 설정 예정
+        reading_taste: state.readingTaste,
+        interests: state.interests,
+        interests_custom: state.interestsCustom || null,
+        reading_level: state.readingLevel,
         role: 'student',
         auth_id: state.authId,
       })
@@ -796,10 +1135,36 @@ async function saveProfile() {
 /* ═══════════════════════════════════════════════════
    DONE SCREEN UPDATE
 ═══════════════════════════════════════════════════ */
+const TASTE_LABELS = {
+  narrative: '📖 이야기 속으로',
+  knowledge: '🔍 새로운 지식',
+  thinking: '💭 생각·질문',
+  any: '😊 아무거나',
+};
+const LEVEL_LABELS = {
+  beginner: '😅 친해지는 중',
+  casual: '📚 가끔 읽어요',
+  regular: '😊 즐겨 읽어요',
+  advanced: '🌟 자신 있어요',
+};
+
 function updateDoneScreen() {
   document.getElementById('done-name').textContent = state.name || '독자';
   document.getElementById('done-name-val').textContent = state.name || '-';
   document.getElementById('done-grade-val').textContent = state.grade || '-';
+  document.getElementById('done-taste-val').textContent = TASTE_LABELS[state.readingTaste] || '-';
+  
+  // 관심 분야 표시 (선택 + 직접입력 결합)
+  const interestParts = [];
+  if (state.interests && state.interests.length > 0) {
+    interestParts.push(state.interests.join(', '));
+  }
+  if (state.interestsCustom) {
+    interestParts.push('+' + state.interestsCustom);
+  }
+  document.getElementById('done-interests-val').textContent = interestParts.join(' ') || '-';
+  
+  document.getElementById('done-level-val').textContent = LEVEL_LABELS[state.readingLevel] || '-';
 }
 
 /* ═══════════════════════════════════════════════════
@@ -808,14 +1173,16 @@ function updateDoneScreen() {
 async function resetAll() {
   if (!confirm('정말 초기화하시겠어요?\n(로컬 데이터만 삭제됩니다. Supabase에 저장된 데이터는 남아있어요.)')) return;
   
-  // Supabase 로그아웃
   if (sb) {
     try { await sb.auth.signOut(); } catch(e) {}
   }
   
-  // 로컬 상태 초기화
   localStorage.clear();
-  Object.assign(state, { name:'', grade:'', userId:null, authId:null });
+  Object.assign(state, {
+    name: '', grade: '', readingTaste: '',
+    interests: [], interestsCustom: '',
+    readingLevel: '', userId: null, authId: null,
+  });
   
   showToast('🗑️ 초기화됐어요. 새로고침합니다...');
   setTimeout(() => location.reload(), 800);
