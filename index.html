@@ -662,6 +662,211 @@ html, body {
   display: inline-block;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── SC-09 READING START (독서 시작 화면) ───────── */
+#sc-reading-start {
+  background: linear-gradient(170deg, var(--teal-dk) 0%, #0a2e25 100%);
+  padding: 0;
+  justify-content: flex-start;
+  overflow-y: auto;
+}
+.reading-inner {
+  display: flex; flex-direction: column;
+  width: 100%; max-width: 400px; padding: 56px 24px 40px;
+  margin: 0 auto;
+}
+.reading-back {
+  background: transparent;
+  color: rgba(255,255,255,.6);
+  border: none;
+  padding: 8px 0;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: left;
+  align-self: flex-start;
+}
+.reading-back:active { color: #fff; }
+.reading-header {
+  margin-bottom: 28px;
+}
+.reading-title {
+  font-size: 22px;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+.reading-sub {
+  font-size: 14px;
+  color: rgba(255,255,255,.5);
+  line-height: 1.6;
+}
+.reading-book-preview {
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.13);
+  border-radius: 16px;
+  padding: 20px 18px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.reading-book-emoji {
+  font-size: 40px;
+  flex-shrink: 0;
+}
+.reading-book-info {
+  flex: 1;
+}
+.reading-book-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+.reading-book-author {
+  font-size: 12px;
+  color: rgba(255,255,255,.5);
+}
+.reading-form-section {
+  background: rgba(255,255,255,.05);
+  border-radius: 16px;
+  padding: 20px 18px;
+  margin-bottom: 16px;
+}
+.reading-form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--gold-lt);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.reading-form-input {
+  width: 100%;
+  background: rgba(255,255,255,.08);
+  border: 2px solid rgba(255,255,255,.15);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 17px;
+  font-family: inherit;
+  color: #fff;
+  outline: none;
+  transition: all .2s;
+}
+.reading-form-input:focus {
+  border-color: var(--gold-lt);
+  background: rgba(255,255,255,.12);
+}
+.reading-form-input::placeholder {
+  color: rgba(255,255,255,.3);
+}
+.reading-form-hint {
+  font-size: 12px;
+  color: rgba(255,255,255,.4);
+  margin-top: 8px;
+  line-height: 1.5;
+}
+.reading-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+.btn-reading-primary {
+  background: var(--teal);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 16px 24px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all .2s;
+  box-shadow: 0 4px 20px rgba(26,107,90,.3);
+}
+.btn-reading-primary:active { transform: scale(.98); }
+.btn-reading-primary:disabled {
+  background: rgba(255,255,255,.1);
+  color: rgba(255,255,255,.3);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+.btn-reading-secondary {
+  background: transparent;
+  color: rgba(255,255,255,.5);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 50px;
+  padding: 14px 24px;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-reading-secondary:active {
+  color: #fff;
+  border-color: rgba(255,255,255,.3);
+}
+
+/* ─── SC-10 READING SUCCESS (시작 완료 화면) ─────── */
+#sc-reading-success {
+  background: linear-gradient(170deg, var(--teal-dk) 0%, #0a2e25 100%);
+  padding: 0;
+  justify-content: center;
+  text-align: center;
+}
+.success-inner {
+  display: flex; flex-direction: column; align-items: center;
+  width: 100%; max-width: 360px; padding: 40px 32px;
+  margin: 0 auto;
+  gap: 20px;
+}
+.success-icon {
+  font-size: 72px;
+  animation: popIn .6s cubic-bezier(.34,1.56,.64,1);
+}
+.success-title {
+  font-size: 24px;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.4;
+}
+.success-message {
+  font-size: 14px;
+  color: rgba(255,255,255,.7);
+  line-height: 1.7;
+}
+.success-card {
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 16px;
+  padding: 18px 20px;
+  width: 100%;
+  margin-top: 12px;
+}
+.success-card-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: rgba(255,255,255,.7);
+  padding: 4px 0;
+}
+.success-card-row .val {
+  font-weight: 700;
+  color: var(--gold-lt);
+}
+.success-actions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
 </style>
 </head>
 <body>
@@ -1062,6 +1267,90 @@ html, body {
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
+
+<!-- ══════════════════════════════════════════════════
+     SC-09: READING START (독서 시작 화면)
+══════════════════════════════════════════════════ -->
+<div id="sc-reading-start" class="screen">
+  <div class="reading-inner">
+    <button class="reading-back" onclick="goScreen('sc-home')">← 돌아가기</button>
+    
+    <div class="reading-header">
+      <div class="reading-title">📖 독서 시작</div>
+      <div class="reading-sub">이 책을 책장에 꽂아두고 함께 읽어볼까요?</div>
+    </div>
+    
+    <div class="reading-book-preview">
+      <span class="reading-book-emoji" id="rs-book-emoji">📖</span>
+      <div class="reading-book-info">
+        <div class="reading-book-title" id="rs-book-title">-</div>
+        <div class="reading-book-author" id="rs-book-author">-</div>
+      </div>
+    </div>
+    
+    <div class="reading-form-section">
+      <label class="reading-form-label">📄 총 페이지 수</label>
+      <input type="number" class="reading-form-input" id="rs-total-pages" 
+        placeholder="예: 256" min="1" max="9999">
+      <div class="reading-form-hint">
+        책 뒷표지나 목차 마지막 쪽수를 적어주세요.<br>
+        모르면 비워두셔도 괜찮아요.
+      </div>
+    </div>
+    
+    <div class="reading-actions">
+      <button class="btn-reading-primary" id="btn-rs-start" onclick="startReadingRecord()">
+        ✨ 독서 시작!
+      </button>
+      <button class="btn-reading-secondary" onclick="goScreen('sc-home')">
+        다음에 할게요
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SC-10: READING SUCCESS (시작 완료 화면)
+══════════════════════════════════════════════════ -->
+<div id="sc-reading-success" class="screen">
+  <div class="success-inner">
+    <div class="success-icon">🌿</div>
+    <div class="success-title">독서 여정이 시작됐어요!</div>
+    <div class="success-message">
+      <span id="rss-name">독자</span>님,<br>
+      좋은 책 한 권을 책장에 꽂으셨네요.<br>
+      천천히, 즐겁게 읽어주세요.
+    </div>
+    
+    <div class="success-card">
+      <div class="success-card-row">
+        <span>책 제목</span>
+        <span class="val" id="rss-book-title">-</span>
+      </div>
+      <div class="success-card-row">
+        <span>총 페이지</span>
+        <span class="val" id="rss-pages">-</span>
+      </div>
+      <div class="success-card-row">
+        <span>시작일</span>
+        <span class="val" id="rss-date">-</span>
+      </div>
+      <div class="success-card-row">
+        <span>상태</span>
+        <span class="val">✅ 책장에 저장됨</span>
+      </div>
+    </div>
+    
+    <div class="success-actions">
+      <button class="btn-reading-primary" onclick="goScreen('sc-home')">
+        🏠 홈으로 돌아가기
+      </button>
+      <button class="btn-reading-secondary" onclick="goShuffleFromSuccess()">
+        🔀 다른 책도 둘러볼게요
+      </button>
+    </div>
+  </div>
+</div>
 
 <script>
 /* ═══════════════════════════════════════════════════
@@ -1647,11 +1936,111 @@ async function shuffleBook() {
   }, 220);
 }
 
-// 읽기 시작 (STEP 3에서 확장)
+// 읽기 시작 - 독서 기록 화면으로 이동
 function startReading() {
   const title = document.getElementById('home-book-title').textContent;
-  showToast(`📖 "${title}" 읽기를 시작했어요!`);
-  // TODO: STEP 3 — AI 말걸기 화면으로 이동
+  const author = document.getElementById('home-book-author').textContent;
+  const emoji = document.getElementById('home-book-emoji').textContent;
+  const bookId = window._currentBookId;
+  
+  // 현재 책 정보를 임시 저장
+  window._readingBook = {
+    id: bookId,
+    title: title,
+    author: author,
+    emoji: emoji
+  };
+  
+  // 독서 시작 화면 채우기
+  document.getElementById('rs-book-emoji').textContent = emoji;
+  document.getElementById('rs-book-title').textContent = title;
+  document.getElementById('rs-book-author').textContent = author;
+  document.getElementById('rs-total-pages').value = '';
+  
+  goScreen('sc-reading-start');
+}
+
+// ═══════════════════════════════════════════════════
+//   독서 기록 시작 (Supabase reading_records insert)
+// ═══════════════════════════════════════════════════
+async function startReadingRecord() {
+  const book = window._readingBook;
+  if (!book) {
+    showToast('❌ 책 정보가 없어요', 'error');
+    return;
+  }
+  
+  const totalPagesInput = document.getElementById('rs-total-pages').value.trim();
+  const totalPages = totalPagesInput ? parseInt(totalPagesInput) : null;
+  
+  // 페이지 수 검증
+  if (totalPages !== null && (isNaN(totalPages) || totalPages < 1 || totalPages > 9999)) {
+    showToast('⚠️ 올바른 페이지 수를 입력해주세요', 'error');
+    return;
+  }
+  
+  const btn = document.getElementById('btn-rs-start');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> 저장 중...';
+  
+  // 데모 모드 처리
+  if (!sb || !state.userId) {
+    setTimeout(() => {
+      showSuccessScreen(book, totalPages);
+      btn.disabled = false;
+      btn.innerHTML = '✨ 독서 시작!';
+    }, 600);
+    return;
+  }
+  
+  try {
+    // book_id가 'DEMO'이거나 G5_6 형식이 아니면 null로 처리
+    const bookIdToSave = (book.id && book.id.startsWith('G5_6-')) ? book.id : null;
+    
+    const { data, error } = await sb
+      .from('reading_records')
+      .insert({
+        user_id: state.userId,
+        book_id: bookIdToSave,
+        book_title: book.title,
+        book_author: book.author,
+        total_pages: totalPages,
+        current_page: 0,
+        status: 'reading'
+      })
+      .select()
+      .single();
+    
+    if (error) throw error;
+    
+    console.log('✅ 독서 기록 저장:', data);
+    showSuccessScreen(book, totalPages);
+    
+  } catch (err) {
+    console.error('❌ 독서 기록 저장 실패:', err);
+    btn.disabled = false;
+    btn.innerHTML = '✨ 독서 시작!';
+    showToast('❌ 저장 실패: ' + err.message, 'error');
+  }
+}
+
+// 성공 화면 표시
+function showSuccessScreen(book, totalPages) {
+  document.getElementById('rss-name').textContent = state.name || '독자';
+  document.getElementById('rss-book-title').textContent = book.title;
+  document.getElementById('rss-pages').textContent = totalPages ? `${totalPages}쪽` : '미입력';
+  
+  const today = new Date();
+  const dateStr = `${today.getFullYear()}.${String(today.getMonth()+1).padStart(2,'0')}.${String(today.getDate()).padStart(2,'0')}`;
+  document.getElementById('rss-date').textContent = dateStr;
+  
+  goScreen('sc-reading-success');
+}
+
+// 성공 화면에서 다른 책 보기
+function goShuffleFromSuccess() {
+  goScreen('sc-home');
+  setTimeout(() => shuffleBook(), 400);
 }
 </script>
 </body>
