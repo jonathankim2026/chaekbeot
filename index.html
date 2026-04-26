@@ -11,7 +11,7 @@
 
 <style>
 /* ═══════════════════════════════════════════════════════
-   책벗 베타 v2.2  —  STEP 2-1C (홈 화면 + 첫 책 추천)
+   책벗 베타 v2.2.1  —  STEP 2-1C (홈 화면 + 첫 책 추천) 버그수정판
    온보딩: 스플래시 → 환영 → 이름·학년 → 취향 → 관심 → 경험 → 저장 → 홈
 ═══════════════════════════════════════════════════════ */
 
@@ -1381,7 +1381,8 @@ async function renderHomeScreen() {
   // 프로필 바
   document.getElementById('hp-grade').textContent  = state.grade   || '-';
   document.getElementById('hp-taste').textContent  = TASTE_SHORT[state.readingTaste] || '-';
-  document.getElementById('hp-level').textContent  = LEVEL_SHORT[state.reading_level] || '-';
+  // ✅ BUG FIX: state.reading_level → state.readingLevel
+  document.getElementById('hp-level').textContent  = LEVEL_SHORT[state.readingLevel] || '-';
   const intCount = (state.interests || []).length;
   document.getElementById('hp-interests').textContent = intCount ? `${intCount}개` : '-';
 
@@ -1397,11 +1398,14 @@ async function renderHomeScreen() {
   }
 }
 
-// 로딩 / 카드 / 빈화면 토글
+// ✅ BUG FIX: 로딩 토글 로직 정리
+// 로딩 켤 때만 카드/빈화면 숨김. 끌 때는 displayBook/showHomeEmpty가 알아서 표시.
 function showHomeLoading(on) {
-  document.getElementById('home-loading').style.display   = on ? 'flex'  : 'none';
-  document.getElementById('home-book-card').style.display = on ? 'none'  : 'none';
-  document.getElementById('home-empty').style.display     = on ? 'none'  : 'none';
+  document.getElementById('home-loading').style.display = on ? 'flex' : 'none';
+  if (on) {
+    document.getElementById('home-book-card').style.display = 'none';
+    document.getElementById('home-empty').style.display = 'none';
+  }
 }
 function showHomeEmpty() {
   document.getElementById('home-empty').style.display = 'block';
@@ -1439,7 +1443,8 @@ async function fetchRecommendedBook() {
   try {
     const grade  = state.grade        || '초5';
     const taste  = state.readingTaste || 'any';
-    const level  = state.reading_level|| 'casual';
+    // ✅ BUG FIX: state.reading_level → state.readingLevel
+    const level  = state.readingLevel || 'casual';
     const interests = state.interests || [];
 
     // 레벨 완화 범위
