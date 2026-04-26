@@ -555,6 +555,49 @@ html, body {
 .home-book-themes { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
 .home-theme-tag { font-size: 11px; font-weight: 600; background: rgba(212,150,10,.18); color: var(--gold-lt); border-radius: 50px; padding: 4px 10px; }
 
+/* ─── 책벗 AI 메시지 (NEW) ─────────────────────── */
+.book-ai-message {
+  background: rgba(212,150,10,.08);
+  border-left: 3px solid var(--gold-lt);
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-bottom: 18px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(255,255,255,.85);
+  position: relative;
+  word-break: keep-all;
+}
+.book-ai-message-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gold-lt);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.book-ai-message-text {
+  font-size: 14px;
+  line-height: 1.75;
+  color: rgba(255,255,255,.85);
+}
+.book-ai-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255,255,255,.5);
+  font-size: 13px;
+  font-style: italic;
+}
+.book-ai-error {
+  color: rgba(255,255,255,.4);
+  font-size: 13px;
+  font-style: italic;
+}
+
 .home-book-actions { display: flex; flex-direction: column; gap: 10px; width: 100%; }
 .btn-home-primary {
   width: 100%; background: var(--teal); color: #fff; border: none;
@@ -963,6 +1006,17 @@ html, body {
         <div class="home-book-author" id="home-book-author">-</div>
         <div class="home-book-summary" id="home-book-summary">-</div>
         <div class="home-book-themes" id="home-book-themes"></div>
+        
+        <!-- ✨ 책벗 AI 메시지 (NEW) -->
+        <div class="book-ai-message" id="book-ai-message">
+          <div class="book-ai-message-label">✨ 책벗의 한 마디</div>
+          <div class="book-ai-loading" id="book-ai-loading">
+            <div class="spinner"></div>
+            <span>책벗이 생각 중이에요…</span>
+          </div>
+          <div class="book-ai-message-text" id="book-ai-message-text" style="display:none;"></div>
+        </div>
+        
         <div class="home-book-actions">
           <button class="btn-home-primary" onclick="startReading()">📖 이 책 읽기 시작</button>
           <button class="btn-home-secondary" onclick="shuffleBook()">🔀 다른 책 볼게요</button>
@@ -1431,6 +1485,65 @@ function displayBook(book) {
 
   // 현재 추천 책 저장 (셔플용)
   window._currentBookId = book.id;
+  
+  // ✨ 책벗 AI 메시지 가져오기 (비동기, 책 카드는 먼저 표시)
+  fetchAIMessage(book);
+}
+
+// ═══════════════════════════════════════════════════
+//   책벗 AI 메시지 호출 (Vercel Serverless Function)
+// ═══════════════════════════════════════════════════
+async function fetchAIMessage(book) {
+  const loadingEl = document.getElementById('book-ai-loading');
+  const textEl = document.getElementById('book-ai-message-text');
+  
+  // 로딩 상태로 초기화
+  loadingEl.style.display = 'flex';
+  loadingEl.innerHTML = '<div class="spinner"></div><span>책벗이 생각 중이에요…</span>';
+  textEl.style.display = 'none';
+  textEl.textContent = '';
+  
+  try {
+    const response = await fetch('/api/recommend', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        book: {
+          title: book.title,
+          author: book.author,
+          summary_oneline: book.summary_oneline,
+          themes: book.themes,
+          length_tag: book.length_tag
+        },
+        user: {
+          name: state.name,
+          grade: state.grade,
+          readingTaste: state.readingTaste,
+          interests: state.interests,
+          interestsCustom: state.interestsCustom,
+          readingLevel: state.readingLevel
+        }
+      })
+    });
+    
+    if (!response.ok) {
+      throw new Error(`서버 응답 오류 (${response.status})`);
+    }
+    
+    const data = await response.json();
+    
+    // 로딩 숨기고 메시지 표시
+    loadingEl.style.display = 'none';
+    textEl.style.display = 'block';
+    textEl.textContent = data.message;
+    
+    console.log('✅ AI 메시지 수신:', data.usage);
+    
+  } catch (err) {
+    console.error('AI 메시지 가져오기 실패:', err);
+    // 실패해도 앱은 정상 작동 (책 카드는 보임)
+    loadingEl.innerHTML = '<span class="book-ai-error">💭 책벗이 잠시 자리를 비웠어요. 책 정보만 봐주세요.</span>';
+  }
 }
 
 // Supabase에서 책 추천 (3단계 폴백)
