@@ -980,7 +980,341 @@ html, body {
   color: #fff;
   border-color: rgba(255,255,255,.3);
 }
+/* ─── SC-12 PAGE RECORD (쪽수 기록 화면 v6) ─── */
+#sc-page-record {
+  background: linear-gradient(170deg, var(--teal-dk) 0%, #0a2e25 100%);
+  padding: 0;
+  justify-content: flex-start;
+  overflow-y: auto;
+}
+.pr-inner {
+  display: flex; flex-direction: column;
+  width: 100%; max-width: 400px;
+  padding: 56px 24px 40px;
+  margin: 0 auto;
+}
+.pr-header {
+  margin-bottom: 24px;
+}
+.pr-book-info {
+  background: rgba(255,255,255,.05);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.pr-book-emoji {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+.pr-book-text {
+  flex: 1;
+  min-width: 0;
+}
+.pr-book-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.3;
+  margin-bottom: 2px;
+  word-break: keep-all;
+}
+.pr-book-author {
+  font-size: 12px;
+  color: rgba(255,255,255,.5);
+}
+.pr-prev-info {
+  text-align: center;
+  font-size: 13px;
+  color: var(--gold-lt);
+  margin-bottom: 16px;
+  padding: 8px 12px;
+  background: rgba(212,150,10,.06);
+  border-radius: 10px;
+}
+.pr-input-section {
+  background: rgba(255,255,255,.05);
+  border-radius: 16px;
+  padding: 22px 18px;
+  margin-bottom: 14px;
+}
+.pr-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--gold-lt);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  text-align: center;
+}
+.pr-page-input {
+  width: 100%;
+  background: rgba(255,255,255,.08);
+  border: 2px solid rgba(255,255,255,.15);
+  border-radius: 12px;
+  padding: 16px 20px;
+  font-size: 22px;
+  font-weight: 700;
+  font-family: inherit;
+  color: #fff;
+  text-align: center;
+  outline: none;
+  transition: all .2s;
+}
+.pr-page-input:focus {
+  border-color: var(--gold-lt);
+  background: rgba(255,255,255,.12);
+}
+.pr-page-input::-webkit-outer-spin-button,
+.pr-page-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.pr-page-suffix {
+  text-align: center;
+  font-size: 13px;
+  color: rgba(255,255,255,.5);
+  margin-top: 6px;
+}
+.pr-progress-preview {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px dashed rgba(255,255,255,.1);
+}
+.pr-progress-text {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: rgba(255,255,255,.65);
+  margin-bottom: 6px;
+}
+.pr-progress-percent {
+  font-weight: 700;
+  color: var(--gold-lt);
+}
+.pr-progress-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255,255,255,.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.pr-progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--gold-lt) 100%);
+  border-radius: 3px;
+  transition: width .3s ease;
+  width: 0%;
+}
+.pr-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0 12px;
+  color: rgba(255,255,255,.3);
+  font-size: 11px;
+}
+.pr-divider::before,
+.pr-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,.1);
+}
+.pr-slider-toggle {
+  width: 100%;
+  background: transparent;
+  border: 1px dashed rgba(255,255,255,.2);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 13px;
+  font-family: inherit;
+  color: rgba(255,255,255,.6);
+  cursor: pointer;
+  transition: all .2s;
+}
+.pr-slider-toggle:active {
+  border-color: var(--gold-lt);
+  color: #fff;
+}
+.pr-slider-section {
+  background: rgba(255,255,255,.05);
+  border-radius: 16px;
+  padding: 22px 18px;
+  margin-bottom: 14px;
+}
+.pr-slider {
+  width: 100%;
+  margin: 16px 0 8px;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  background: rgba(255,255,255,.15);
+  border-radius: 3px;
+  outline: none;
+}
+.pr-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  background: var(--gold-lt);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(212,150,10,.4);
+}
+.pr-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  background: var(--gold-lt);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+.pr-slider-value {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin-top: 8px;
+}
+.pr-slider-value-pages {
+  color: var(--gold-lt);
+  font-size: 22px;
+}
 
+/* 메모·어휘 접힘 영역 */
+.pr-collapsible {
+  background: rgba(255,255,255,.03);
+  border-radius: 14px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  transition: background .2s;
+}
+.pr-collapsible-header {
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 16px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  color: rgba(255,255,255,.7);
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: color .2s;
+}
+.pr-collapsible-header:hover {
+  color: #fff;
+}
+.pr-collapsible.open .pr-collapsible-header {
+  color: var(--gold-lt);
+}
+.pr-collapsible-arrow {
+  font-size: 12px;
+  transition: transform .25s;
+}
+.pr-collapsible.open .pr-collapsible-arrow {
+  transform: rotate(180deg);
+}
+.pr-collapsible-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .3s ease, padding .3s ease;
+  padding: 0 18px;
+}
+.pr-collapsible.open .pr-collapsible-body {
+  max-height: 400px;
+  padding: 0 18px 18px;
+}
+.pr-textarea {
+  width: 100%;
+  background: rgba(255,255,255,.08);
+  border: 2px solid rgba(255,255,255,.12);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #fff;
+  outline: none;
+  resize: none;
+  min-height: 70px;
+  transition: border-color .2s;
+}
+.pr-textarea:focus {
+  border-color: var(--gold-lt);
+}
+.pr-textarea::placeholder {
+  color: rgba(255,255,255,.3);
+  font-style: italic;
+}
+.pr-vocab-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.pr-vocab-input {
+  flex: 1;
+  background: rgba(255,255,255,.08);
+  border: 2px solid rgba(255,255,255,.12);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-family: inherit;
+  color: #fff;
+  outline: none;
+}
+.pr-vocab-input:focus {
+  border-color: var(--gold-lt);
+}
+.pr-vocab-input::placeholder {
+  color: rgba(255,255,255,.3);
+}
+.pr-vocab-meaning {
+  flex: 1.5;
+}
+.pr-section-hint {
+  font-size: 12px;
+  color: rgba(255,255,255,.4);
+  margin-top: 10px;
+  font-style: italic;
+  line-height: 1.5;
+}
+.pr-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 18px;
+}
+.btn-pr-save {
+  background: var(--gold);
+  color: var(--ink);
+  border: none;
+  border-radius: 50px;
+  padding: 16px 24px;
+  font-size: 16px;
+  font-weight: 800;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all .2s;
+  box-shadow: 0 4px 20px rgba(212,150,10,.3);
+}
+.btn-pr-save:active {
+  transform: scale(.98);
+  background: var(--gold-lt);
+}
+.btn-pr-save:disabled {
+  background: rgba(255,255,255,.1);
+  color: rgba(255,255,255,.3);
+  box-shadow: none;
+  cursor: not-allowed;
+}
 /* ─── SC-10 READING SUCCESS (시작 완료 화면) ─────── */
 #sc-reading-success {
   background: linear-gradient(170deg, var(--teal-dk) 0%, #0a2e25 100%);
@@ -1585,7 +1919,113 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
   </div>
 </div>
-
+<!-- ══════════════════════════════════════════════════
+     SC-12: PAGE RECORD (쪽수 기록 화면 v6)
+     합의문서 v1.0 § ③④
+══════════════════════════════════════════════════ -->
+<div id="sc-page-record" class="screen">
+  <div class="pr-inner">
+    <button class="reading-back" onclick="goScreen('sc-home')">← 돌아가기</button>
+    
+    <div class="pr-header">
+      <div class="reading-title">📝 오늘 읽은 쪽수 기록</div>
+      <div class="reading-sub">
+        오늘은 어디까지 읽으셨어요? 🌿
+      </div>
+    </div>
+    
+    <!-- 책 정보 -->
+    <div class="pr-book-info">
+      <span class="pr-book-emoji" id="pr-book-emoji">📖</span>
+      <div class="pr-book-text">
+        <div class="pr-book-title" id="pr-book-title">-</div>
+        <div class="pr-book-author" id="pr-book-author">-</div>
+      </div>
+    </div>
+    
+    <!-- 이전 진행 안내 -->
+    <div class="pr-prev-info" id="pr-prev-info">
+      처음 기록하시는군요 🌱
+    </div>
+    
+    <!-- 끝 쪽 입력 (메인) -->
+    <div class="pr-input-section" id="pr-input-section">
+      <label class="pr-label">📍 어디까지 읽으셨나요?</label>
+      <input type="number" class="pr-page-input" id="pr-page-input" 
+        placeholder="0" min="0" max="9999">
+      <div class="pr-page-suffix">쪽</div>
+      
+      <!-- 진행률 미리보기 (총 페이지가 있을 때만) -->
+      <div class="pr-progress-preview" id="pr-progress-preview" style="display:none;">
+        <div class="pr-progress-text">
+          <span id="pr-progress-pages">- / -쪽</span>
+          <span class="pr-progress-percent" id="pr-progress-percent">0%</span>
+        </div>
+        <div class="pr-progress-bar">
+          <div class="pr-progress-bar-fill" id="pr-progress-bar-fill"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 슬라이더 모드 토글 -->
+    <button class="pr-slider-toggle" id="pr-slider-toggle" onclick="toggleSliderMode()">
+      🌿 쪽수가 정확히 기억 안 나요
+    </button>
+    
+    <!-- 슬라이더 입력 (보조) -->
+    <div class="pr-slider-section" id="pr-slider-section" style="display:none;">
+      <label class="pr-label">📊 오늘 읽은 양은 대략?</label>
+      <input type="range" class="pr-slider" id="pr-slider" 
+        min="1" max="100" value="20">
+      <div class="pr-slider-value">
+        오늘 약 <span class="pr-slider-value-pages" id="pr-slider-pages">20</span>쪽 읽음
+      </div>
+    </div>
+    
+    <!-- 한 줄 메모 (접힘) -->
+    <div class="pr-collapsible" id="pr-memo-collapsible">
+      <button class="pr-collapsible-header" onclick="toggleCollapse('pr-memo-collapsible')">
+        <span>💛 한 줄 메모 (선택)</span>
+        <span class="pr-collapsible-arrow">▼</span>
+      </button>
+      <div class="pr-collapsible-body">
+        <textarea class="pr-textarea" id="pr-memo-text" 
+          placeholder='예: "잎싹의 자유 의지가 인상적이었어"'
+          maxlength="200"></textarea>
+        <div class="pr-section-hint">
+          오늘 마음에 남은 한 문장이나 느낌을 자유롭게 적어주세요.
+        </div>
+      </div>
+    </div>
+    
+    <!-- 어휘 저장 (접힘) -->
+    <div class="pr-collapsible" id="pr-vocab-collapsible">
+      <button class="pr-collapsible-header" onclick="toggleCollapse('pr-vocab-collapsible')">
+        <span>📝 어휘 저장 (선택)</span>
+        <span class="pr-collapsible-arrow">▼</span>
+      </button>
+      <div class="pr-collapsible-body">
+        <div class="pr-vocab-row">
+          <input type="text" class="pr-vocab-input" id="pr-vocab-word" 
+            placeholder="단어" maxlength="50">
+          <input type="text" class="pr-vocab-input pr-vocab-meaning" id="pr-vocab-meaning" 
+            placeholder="뜻 (선택)" maxlength="200">
+        </div>
+        <div class="pr-section-hint">
+          새로 알게 된 단어 하나만 남겨주세요. 뜻은 비워두셔도 됩니다.
+        </div>
+      </div>
+    </div>
+    
+    <!-- 저장 버튼 -->
+    <div class="pr-actions">
+      <button class="btn-pr-save" id="btn-pr-save" onclick="savePageRecord()">
+        💾 기록 저장하기
+      </button>
+    </div>
+    
+  </div>
+</div>
 <!-- ══════════════════════════════════════════════════
      SC-10: READING SUCCESS (시작 완료 화면)
 ══════════════════════════════════════════════════ -->
@@ -2598,16 +3038,252 @@ function renderCurrentReadingCard(record) {
   section.style.display = 'block';
 }
 
-// 쪽수 기록 화면으로 이동 (SC-12 — 다음 단계 [3]에서 구현)
+// ═══════════════════════════════════════════════════
+//   📝 SC-12 쪽수 기록 화면 (v6 - 합의문서 § ③④)
+// ═══════════════════════════════════════════════════
+
+// 쪽수 기록 화면 진입
 function goToPageRecord() {
-  if (!window._currentReadingRecord) {
+  const record = window._currentReadingRecord;
+  if (!record) {
     showToast('⚠️ 현재 읽는 책이 없어요', 'error');
     return;
   }
-  // TODO: 다음 단계에서 SC-12 화면 구현 후 연결
-  showToast('📝 쪽수 기록 화면 — 다음 단계에서 만듭니다');
+  
+  // 화면 초기화
+  const emoji = (record.books && record.books.cover_emoji) 
+    ? record.books.cover_emoji : '📖';
+  document.getElementById('pr-book-emoji').textContent = emoji;
+  document.getElementById('pr-book-title').textContent = record.book_title || '-';
+  document.getElementById('pr-book-author').textContent = record.book_author || '(저자 미상)';
+  
+  // 이전 진행 안내
+  const prevPage = record.current_page || 0;
+  const totalPages = record.total_pages;
+  const prevInfo = document.getElementById('pr-prev-info');
+  
+  if (prevPage > 0) {
+    prevInfo.textContent = `지난번 ${prevPage}쪽까지 읽으셨어요 🌿`;
+  } else {
+    prevInfo.textContent = '처음 기록하시는군요 🌱';
+  }
+  
+  // 입력값 초기화
+  const pageInput = document.getElementById('pr-page-input');
+  pageInput.value = '';
+  pageInput.placeholder = prevPage > 0 ? String(prevPage) : '0';
+  
+  // 진행률 미리보기 영역 - 총 페이지 있을 때만
+  const previewWrap = document.getElementById('pr-progress-preview');
+  if (totalPages && totalPages > 0) {
+    previewWrap.style.display = 'block';
+    document.getElementById('pr-progress-pages').textContent = `0 / ${totalPages}쪽`;
+    document.getElementById('pr-progress-percent').textContent = '0%';
+    document.getElementById('pr-progress-bar-fill').style.width = '0%';
+  } else {
+    previewWrap.style.display = 'none';
+  }
+  
+  // 슬라이더 영역 초기화 (숨김)
+  document.getElementById('pr-slider-section').style.display = 'none';
+  document.getElementById('pr-slider-toggle').style.display = 'block';
+  document.getElementById('pr-slider').value = 20;
+  document.getElementById('pr-slider-pages').textContent = '20';
+  
+  // 메모·어휘 접힘 상태로 시작
+  document.getElementById('pr-memo-collapsible').classList.remove('open');
+  document.getElementById('pr-vocab-collapsible').classList.remove('open');
+  document.getElementById('pr-memo-text').value = '';
+  document.getElementById('pr-vocab-word').value = '';
+  document.getElementById('pr-vocab-meaning').value = '';
+  
+  // 모드 추적 (page / slider)
+  window._prInputMode = 'page';
+  
+  goScreen('sc-page-record');
+  
+  // 약간의 지연 후 입력란 포커스
+  setTimeout(() => pageInput.focus(), 400);
 }
 
+// 끝 쪽 입력 시 진행률 실시간 갱신
+document.addEventListener('DOMContentLoaded', function() {
+  const pageInput = document.getElementById('pr-page-input');
+  if (pageInput) {
+    pageInput.addEventListener('input', function() {
+      const record = window._currentReadingRecord;
+      if (!record || !record.total_pages) return;
+      
+      const value = parseInt(this.value) || 0;
+      const total = record.total_pages;
+      const percent = Math.min(100, Math.max(0, Math.round((value / total) * 100)));
+      
+      document.getElementById('pr-progress-pages').textContent = `${value} / ${total}쪽`;
+      document.getElementById('pr-progress-percent').textContent = `${percent}%`;
+      document.getElementById('pr-progress-bar-fill').style.width = percent + '%';
+    });
+  }
+  
+  // 슬라이더 실시간 갱신
+  const slider = document.getElementById('pr-slider');
+  if (slider) {
+    slider.addEventListener('input', function() {
+      document.getElementById('pr-slider-pages').textContent = this.value;
+    });
+  }
+});
+
+// 슬라이더 모드 토글
+function toggleSliderMode() {
+  const inputSection = document.getElementById('pr-input-section');
+  const sliderSection = document.getElementById('pr-slider-section');
+  const toggleBtn = document.getElementById('pr-slider-toggle');
+  
+  if (window._prInputMode === 'page') {
+    // 슬라이더 모드로 전환
+    inputSection.style.display = 'none';
+    sliderSection.style.display = 'block';
+    toggleBtn.textContent = '✏️ 쪽수로 정확히 입력할게요';
+    window._prInputMode = 'slider';
+  } else {
+    // 끝 쪽 입력 모드로 전환
+    inputSection.style.display = 'block';
+    sliderSection.style.display = 'none';
+    toggleBtn.textContent = '🌿 쪽수가 정확히 기억 안 나요';
+    window._prInputMode = 'page';
+  }
+}
+
+// 메모·어휘 접힘 토글
+function toggleCollapse(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+// 쪽수 저장
+async function savePageRecord() {
+  const record = window._currentReadingRecord;
+  if (!record) {
+    showToast('⚠️ 현재 읽는 책이 없어요', 'error');
+    return;
+  }
+  
+  // 새 끝 쪽 계산
+  let newEndPage;
+  
+  if (window._prInputMode === 'slider') {
+    // 슬라이더 모드: 이전 쪽 + 슬라이더 값
+    const sliderValue = parseInt(document.getElementById('pr-slider').value) || 0;
+    newEndPage = (record.current_page || 0) + sliderValue;
+  } else {
+    // 끝 쪽 입력 모드
+    const inputValue = document.getElementById('pr-page-input').value.trim();
+    if (!inputValue) {
+      showToast('⚠️ 쪽수를 입력해주세요', 'error');
+      document.getElementById('pr-page-input').focus();
+      return;
+    }
+    newEndPage = parseInt(inputValue);
+    if (isNaN(newEndPage) || newEndPage < 0) {
+      showToast('⚠️ 올바른 쪽수를 입력해주세요', 'error');
+      return;
+    }
+  }
+  
+  // 검증 ① 역행 금지
+  const prevPage = record.current_page || 0;
+  if (newEndPage < prevPage) {
+    showToast(`🌿 지난번 ${prevPage}쪽까지였어요. 다시 읽으셨다면 그 쪽수보다 크게 적어주세요`, 'error');
+    return;
+  }
+  
+  // 검증 ② 총 페이지 초과 확인
+  const totalPages = record.total_pages;
+  if (totalPages && newEndPage > totalPages) {
+    showToast(`🌿 총 ${totalPages}쪽을 넘어섰어요. 완독 처리는 다음 단계에서 만듭니다`, 'error');
+    return;
+  }
+  
+  // 메모·어휘 수집
+  const memoText = document.getElementById('pr-memo-text').value.trim();
+  const vocabWord = document.getElementById('pr-vocab-word').value.trim();
+  const vocabMeaning = document.getElementById('pr-vocab-meaning').value.trim();
+  
+  // 저장 시작
+  const btn = document.getElementById('btn-pr-save');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> 저장 중...';
+  
+  // 데모 모드
+  if (!sb || !state.userId) {
+    setTimeout(() => {
+      showToast(`💛 ${newEndPage}쪽 기록됐어요`);
+      setTimeout(() => goScreen('sc-home'), 1500);
+    }, 500);
+    return;
+  }
+  
+  try {
+    // 1) reading_records 갱신
+    const { error: updateError } = await sb
+      .from('reading_records')
+      .update({
+        current_page: newEndPage,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', record.id);
+    
+    if (updateError) throw updateError;
+    
+    // 2) 메모 저장 (선택)
+    if (memoText) {
+      const { error: memoError } = await sb
+        .from('reading_memos')
+        .insert({
+          user_id: state.userId,
+          reading_record_id: record.id,
+          memo_text: memoText,
+          page_number: newEndPage
+        });
+      
+      if (memoError) console.warn('메모 저장 실패:', memoError);
+    }
+    
+    // 3) 어휘 저장 (선택) - book_id 있을 때만
+    if (vocabWord && record.book_id) {
+      const { error: vocabError } = await sb
+        .from('vocabulary_notes')
+        .insert({
+          user_id: state.userId,
+          book_id: record.book_id,
+          word: vocabWord,
+          meaning: vocabMeaning || null,
+          page_number: newEndPage
+        });
+      
+      if (vocabError) console.warn('어휘 저장 실패:', vocabError);
+    } else if (vocabWord && !record.book_id) {
+      // 직접 등록 책은 vocabulary_notes에 못 넣음 (book_id 필수)
+      console.log('직접 등록 책은 어휘 저장 건너뜀 (book_id 없음)');
+    }
+    
+    console.log('✅ 쪽수 기록 저장:', newEndPage);
+    
+    // 성공 피드백
+    showToast(`💛 ${newEndPage}쪽 기록됐어요`);
+    
+    // 1.5초 후 홈으로
+    setTimeout(() => {
+      goScreen('sc-home');
+      setTimeout(() => renderHomeScreen(), 400);
+    }, 1500);
+    
+  } catch (err) {
+    console.error('❌ 쪽수 기록 저장 실패:', err);
+    btn.disabled = false;
+    btn.innerHTML = '💾 기록 저장하기';
+    showToast('❌ 저장 실패: ' + err.message, 'error');
+  }
+}
 // 완독 처리 (단계 [4]에서 구현)
 function markBookCompleted() {
   showToast('📖 완독 처리 — 다음 단계에서 만듭니다');
