@@ -628,6 +628,43 @@ html, body {
 .home-profile-label { font-size: 10px; color: rgba(255,255,255,.35); letter-spacing: .05em; }
 .home-profile-value { font-size: 13px; font-weight: 700; color: rgba(255,255,255,.75); }
 
+/* ─── 경로 B 진입 (NEW v5) ─────────────────────── */
+.home-path-b-section {
+  width: 100%;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255,255,255,.1);
+}
+.home-path-b-card {
+  background: rgba(212,150,10,.06);
+  border: 1px dashed rgba(212,150,10,.3);
+  border-radius: 16px;
+  padding: 18px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all .2s;
+}
+.home-path-b-card:active {
+  transform: scale(.98);
+  background: rgba(212,150,10,.1);
+}
+.home-path-b-icon {
+  font-size: 28px;
+  display: block;
+  margin-bottom: 8px;
+}
+.home-path-b-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gold-lt);
+  margin-bottom: 4px;
+}
+.home-path-b-desc {
+  font-size: 12px;
+  color: rgba(255,255,255,.5);
+  line-height: 1.5;
+}
+
 /* ─── TOAST ───────────────────────────────────────── */
 .toast {
   position: fixed;
@@ -1262,11 +1299,85 @@ html, body {
       </div>
     </div>
 
+    <!-- 🆕 경로 B 진입 (직접 등록) -->
+    <div class="home-path-b-section">
+      <div class="home-path-b-card" onclick="goToSelfRegister()">
+        <span class="home-path-b-icon">📖</span>
+        <div class="home-path-b-title">읽고 있는 책 직접 등록하기</div>
+        <div class="home-path-b-desc">
+          책벗 DB에 없는 책도 함께 키워가요 🌿
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
+
+<!-- ══════════════════════════════════════════════════
+     SC-11: SELF-REGISTER (경로 B - 직접 등록)
+     v5 NEW
+══════════════════════════════════════════════════ -->
+<div id="sc-self-register" class="screen">
+  <div class="reading-inner">
+    <button class="reading-back" onclick="goScreen('sc-home')">← 돌아가기</button>
+    
+    <div class="reading-header">
+      <div class="reading-title">📖 직접 등록하기</div>
+      <div class="reading-sub">
+        책벗 DB에 없는 책도 함께 키워가요.<br>
+        간단한 정보만 알려주시면 됩니다.
+      </div>
+    </div>
+    
+    <div class="reading-form-section">
+      <label class="reading-form-label">📚 책 제목 *</label>
+      <input type="text" class="reading-form-input" id="sr-title" 
+        placeholder="예: 채식주의자" maxlength="100" autocomplete="off">
+      <div class="reading-form-hint">필수 입력 항목입니다.</div>
+    </div>
+    
+    <div class="reading-form-section">
+      <label class="reading-form-label">✍️ 저자 (선택)</label>
+      <input type="text" class="reading-form-input" id="sr-author" 
+        placeholder="예: 한강" maxlength="50" autocomplete="off">
+      <div class="reading-form-hint">모르시면 비워두셔도 됩니다.</div>
+    </div>
+    
+    <div class="reading-form-section">
+      <label class="reading-form-label">📄 총 페이지 수 (선택)</label>
+      <input type="number" class="reading-form-input" id="sr-pages" 
+        placeholder="예: 256" min="1" max="9999">
+      <div class="reading-form-hint">
+        나중에 진행률 표시에 사용돼요. 모르면 비워두셔도 OK.
+      </div>
+    </div>
+    
+    <div class="reading-actions">
+      <button class="btn-reading-primary" id="btn-sr-submit" onclick="submitSelfRegister()" disabled>
+        ✨ 등록하고 시작하기
+      </button>
+      <button class="btn-reading-secondary" onclick="goScreen('sc-home')">
+        다음에 할게요
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════ SC-11 진입 시 입력 검증 활성화 ═════════
+document.addEventListener('DOMContentLoaded', function() {
+  const titleInput = document.getElementById('sr-title');
+  const submitBtn = document.getElementById('btn-sr-submit');
+  if (titleInput && submitBtn) {
+    titleInput.addEventListener('input', function() {
+      submitBtn.disabled = this.value.trim().length < 1;
+    });
+  }
+});
+</script>
 
 <!-- ══════════════════════════════════════════════════
      SC-09: READING START (독서 시작 화면)
@@ -2041,6 +2152,210 @@ function showSuccessScreen(book, totalPages) {
 function goShuffleFromSuccess() {
   goScreen('sc-home');
   setTimeout(() => shuffleBook(), 400);
+}
+
+// ═══════════════════════════════════════════════════
+//   경로 B — 직접 등록 (NEW v5)
+// ═══════════════════════════════════════════════════
+
+// 경로 B 진입
+function goToSelfRegister() {
+  // 입력 필드 초기화
+  document.getElementById('sr-title').value = '';
+  document.getElementById('sr-author').value = '';
+  document.getElementById('sr-pages').value = '';
+  document.getElementById('btn-sr-submit').disabled = true;
+  
+  goScreen('sc-self-register');
+  
+  // 약간 지연 후 제목 input에 포커스
+  setTimeout(() => {
+    const titleInput = document.getElementById('sr-title');
+    if (titleInput) titleInput.focus();
+  }, 400);
+}
+
+// 경로 B 제출 - reading_records에 저장 (book_id=NULL)
+async function submitSelfRegister() {
+  const title = document.getElementById('sr-title').value.trim();
+  const author = document.getElementById('sr-author').value.trim();
+  const pagesInput = document.getElementById('sr-pages').value.trim();
+  
+  if (!title) {
+    showToast('⚠️ 책 제목은 꼭 입력해주세요', 'error');
+    return;
+  }
+  
+  const totalPages = pagesInput ? parseInt(pagesInput) : null;
+  if (totalPages !== null && (isNaN(totalPages) || totalPages < 1 || totalPages > 9999)) {
+    showToast('⚠️ 페이지 수를 올바르게 입력해주세요', 'error');
+    return;
+  }
+  
+  const btn = document.getElementById('btn-sr-submit');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> 등록 중...';
+  
+  // 직접 등록 책 정보를 임시 저장 (성공 화면용)
+  const selfBook = {
+    id: null,           // DB 밖 책
+    title: title,
+    author: author || '(저자 미입력)',
+    emoji: '📖',
+    isSelfRegistered: true
+  };
+  window._readingBook = selfBook;
+  
+  // 데모 모드 처리
+  if (!sb || !state.userId) {
+    setTimeout(() => {
+      showSuccessScreenForSelfRegister(selfBook, totalPages);
+      btn.disabled = false;
+      btn.innerHTML = '✨ 등록하고 시작하기';
+    }, 600);
+    return;
+  }
+  
+  try {
+    const { data, error } = await sb
+      .from('reading_records')
+      .insert({
+        user_id: state.userId,
+        book_id: null,                    // ⭐ DB 밖 책
+        book_title: title,
+        book_author: author || null,
+        total_pages: totalPages,
+        current_page: 0,
+        status: 'reading',
+        note: '[직접 등록]'                // 추후 식별용 메모
+      })
+      .select()
+      .single();
+    
+    if (error) throw error;
+    
+    console.log('✅ 직접 등록 책 저장:', data);
+    showSuccessScreenForSelfRegister(selfBook, totalPages);
+    
+  } catch (err) {
+    console.error('❌ 직접 등록 실패:', err);
+    btn.disabled = false;
+    btn.innerHTML = '✨ 등록하고 시작하기';
+    showToast('❌ 저장 실패: ' + err.message, 'error');
+  }
+}
+
+// 경로 B 성공 화면 - 정여울 톤 메시지 호출
+function showSuccessScreenForSelfRegister(book, totalPages) {
+  document.getElementById('rss-name').textContent = state.name || '독자';
+  document.getElementById('rss-book-title').textContent = book.title;
+  document.getElementById('rss-pages').textContent = totalPages ? `${totalPages}쪽` : '미입력';
+  
+  const today = new Date();
+  const dateStr = `${today.getFullYear()}.${String(today.getMonth()+1).padStart(2,'0')}.${String(today.getDate()).padStart(2,'0')}`;
+  document.getElementById('rss-date').textContent = dateStr;
+  
+  goScreen('sc-reading-success');
+  
+  // 정여울 톤 메시지 호출 (성공 화면에 추가 표시)
+  setTimeout(() => {
+    showSelfRegisterMessage(book);
+  }, 500);
+}
+
+// 경로 B 전용 메시지 표시 (정여울 톤)
+async function showSelfRegisterMessage(book) {
+  // 성공 화면의 success-message 영역에 동적으로 메시지 추가
+  const successInner = document.querySelector('#sc-reading-success .success-inner');
+  if (!successInner) return;
+  
+  // 기존 정여울 메시지가 있으면 제거
+  const existing = document.getElementById('self-register-message');
+  if (existing) existing.remove();
+  
+  // 새 메시지 영역 생성
+  const msgBox = document.createElement('div');
+  msgBox.id = 'self-register-message';
+  msgBox.className = 'success-card';
+  msgBox.style.background = 'rgba(212,150,10,.08)';
+  msgBox.style.borderColor = 'rgba(212,150,10,.3)';
+  msgBox.style.padding = '20px 22px';
+  msgBox.style.lineHeight = '1.8';
+  msgBox.style.fontSize = '14px';
+  msgBox.style.color = 'rgba(255,255,255,.85)';
+  msgBox.style.textAlign = 'left';
+  msgBox.style.whiteSpace = 'pre-wrap';
+  msgBox.style.marginTop = '20px';
+  
+  // 로딩 표시
+  msgBox.innerHTML = '<div style="display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.5);font-size:13px;font-style:italic;"><div class="spinner"></div><span>책벗이 정성스레 인사를 적고 있어요…</span></div>';
+  
+  // success-card 다음에 삽입
+  const firstSuccessCard = successInner.querySelector('.success-card');
+  if (firstSuccessCard && firstSuccessCard.parentNode) {
+    firstSuccessCard.parentNode.insertBefore(msgBox, firstSuccessCard.nextSibling);
+  } else {
+    successInner.appendChild(msgBox);
+  }
+  
+  // API 호출
+  try {
+    const response = await fetch('/api/recommend', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        mode: 'self_registered',                // ⭐ 경로 B 모드
+        book: {
+          title: book.title,
+          author: book.author
+        },
+        user: {
+          name: state.name,
+          grade: state.grade,
+          readingTaste: state.readingTaste,
+          interests: state.interests,
+          interestsCustom: state.interestsCustom,
+          readingLevel: state.readingLevel
+        }
+      })
+    });
+    
+    if (!response.ok) throw new Error(`서버 응답 오류 (${response.status})`);
+    
+    const data = await response.json();
+    
+    // 메시지 표시 (애니메이션)
+    msgBox.innerHTML = `
+      <div style="font-size:11px;font-weight:700;color:var(--gold-lt);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px;">
+        ✨ 책벗의 한 마디
+      </div>
+      <div style="white-space:pre-wrap;">${escapeHtml(data.message)}</div>
+    `;
+    
+    console.log('✅ 직접 등록 메시지 수신:', data.usage);
+    
+  } catch (err) {
+    console.error('직접 등록 메시지 실패:', err);
+    msgBox.innerHTML = `
+      <div style="font-size:11px;font-weight:700;color:var(--gold-lt);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px;">
+        ✨ 책벗의 한 마디
+      </div>
+      <div style="line-height:1.8;color:rgba(255,255,255,.85);">${state.name} 님이 골라주신 「${book.title}」 — 
+
+이 책은 아직 책벗 DB에 없어요. 괜찮아요. 어쩌면 그래서 더 좋은 만남일지도요.
+
+책벗은 백과사전이 아니에요. 독자와 함께 자라는 책장이거든요. ${state.name} 님이 읽고 남겨주시는 한 문장이 이 책에 대한 책벗의 첫 기록이 될 거예요.
+
+천천히 읽어주세요. 조급해하지 마시고요. 다 읽으신 후의 짧은 한 마디 — 그 한 마디가 다음 독자의 길잡이가 될 거예요. 🌿</div>
+    `;
+  }
+}
+
+// HTML 이스케이프 헬퍼
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
 }
 </script>
 </body>
