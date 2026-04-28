@@ -664,7 +664,138 @@ html, body {
   color: rgba(255,255,255,.5);
   line-height: 1.5;
 }
-
+/* ─── 지금 읽고 있어요 카드 (NEW v6) ─────────── */
+.home-current-section {
+  width: 100%;
+  margin-bottom: 32px;
+}
+.home-current-card {
+  background: rgba(212,150,10,.08);
+  border: 1px solid rgba(212,150,10,.25);
+  border-radius: 20px;
+  padding: 22px 20px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+.home-current-card::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  left: -30px;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(212,150,10,.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+.home-current-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+  position: relative;
+}
+.home-current-emoji {
+  font-size: 36px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,.3));
+}
+.home-current-info {
+  flex: 1;
+  min-width: 0;
+}
+.home-current-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.35;
+  margin-bottom: 3px;
+  word-break: keep-all;
+}
+.home-current-author {
+  font-size: 12px;
+  color: rgba(255,255,255,.5);
+}
+.home-current-progress {
+  margin-bottom: 18px;
+  position: relative;
+}
+.home-current-progress-text {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: rgba(255,255,255,.65);
+  margin-bottom: 6px;
+}
+.home-current-progress-pages {
+  font-weight: 700;
+  color: var(--gold-lt);
+}
+.home-current-progress-percent {
+  font-weight: 700;
+  color: rgba(255,255,255,.8);
+}
+.home-current-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255,255,255,.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.home-current-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--gold-lt) 100%);
+  border-radius: 3px;
+  transition: width .5s ease;
+}
+.home-current-no-pages {
+  font-size: 12px;
+  color: rgba(255,255,255,.4);
+  font-style: italic;
+  text-align: center;
+  padding: 8px 0 16px;
+}
+.home-current-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+}
+.btn-current-record {
+  width: 100%;
+  background: var(--gold);
+  color: var(--ink);
+  border: none;
+  border-radius: 50px;
+  padding: 14px 20px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all .2s;
+  box-shadow: 0 4px 16px rgba(212,150,10,.3);
+}
+.btn-current-record:active {
+  transform: scale(.97);
+  background: var(--gold-lt);
+}
+.btn-current-complete {
+  width: 100%;
+  background: transparent;
+  color: rgba(255,255,255,.65);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 50px;
+  padding: 11px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-current-complete:active {
+  color: #fff;
+  border-color: rgba(255,255,255,.4);
+}
 /* ─── TOAST ───────────────────────────────────────── */
 .toast {
   position: fixed;
@@ -1230,7 +1361,42 @@ html, body {
       </div>
       <div class="home-greeting-sub" id="home-sub">오늘의 책 한 권을 준비했어요.</div>
     </div>
-
+<!-- 🆕 지금 읽고 있어요 (v6) - 합의문서 § ① -->
+    <div class="home-current-section" id="home-current-section" style="display:none;">
+      <div class="home-section-title">📖 지금 읽고 있어요</div>
+      <div class="home-current-card">
+        <div class="home-current-header">
+          <span class="home-current-emoji" id="hc-emoji">📖</span>
+          <div class="home-current-info">
+            <div class="home-current-title" id="hc-title">-</div>
+            <div class="home-current-author" id="hc-author">-</div>
+          </div>
+        </div>
+        
+        <div class="home-current-progress" id="hc-progress-wrap">
+          <div class="home-current-progress-text">
+            <span class="home-current-progress-pages" id="hc-pages">-</span>
+            <span class="home-current-progress-percent" id="hc-percent">-</span>
+          </div>
+          <div class="home-current-bar">
+            <div class="home-current-bar-fill" id="hc-bar-fill" style="width:0%"></div>
+          </div>
+        </div>
+        
+        <div class="home-current-no-pages" id="hc-no-pages" style="display:none;">
+          페이지 수를 모를 땐 진행률은 잠시 미뤄둘게요 🌿
+        </div>
+        
+        <div class="home-current-actions">
+          <button class="btn-current-record" onclick="goToPageRecord()">
+            📝 오늘 읽은 쪽수 기록
+          </button>
+          <button class="btn-current-complete" id="btn-current-complete" onclick="markBookCompleted()" style="display:none;">
+            📖 다 읽었어요
+          </button>
+        </div>
+      </div>
+    </div>
     <!-- 책 추천 영역 -->
     <div class="home-book-section">
       <div class="home-section-title">✨ 오늘의 추천</div>
@@ -1840,7 +2006,10 @@ async function renderHomeScreen() {
   const intCount = (state.interests || []).length;
   document.getElementById('hp-interests').textContent = intCount ? `${intCount}개` : '-';
 
-  // 책 불러오기
+ // 🆕 현재 읽는 책 카드 (병렬 로딩 - 추천 책과 동시에)
+  fetchCurrentReadingBook().then(record => renderCurrentReadingCard(record));
+ 
+// 책 불러오기
   showHomeLoading(true);
   const book = await fetchRecommendedBook();
   showHomeLoading(false);
@@ -2350,7 +2519,99 @@ async function showSelfRegisterMessage(book) {
     `;
   }
 }
+// ═══════════════════════════════════════════════════
+//   📖 지금 읽고 있어요 카드 (v6 - 합의문서 § ①)
+// ═══════════════════════════════════════════════════
 
+// 현재 읽는 책 가져오기 (status='reading' 중 가장 최근 1건)
+async function fetchCurrentReadingBook() {
+  if (!sb || !state.userId) return null;
+  
+  try {
+    const { data, error } = await sb
+      .from('reading_records')
+      .select('*, books(cover_emoji)')
+      .eq('user_id', state.userId)
+      .eq('status', 'reading')
+      .order('updated_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    
+    if (error) {
+      console.error('현재 읽는 책 조회 오류:', error);
+      return null;
+    }
+    return data;
+  } catch (e) {
+    console.error('현재 읽는 책 불러오기 예외:', e);
+    return null;
+  }
+}
+
+// "지금 읽고 있어요" 카드 렌더링
+function renderCurrentReadingCard(record) {
+  const section = document.getElementById('home-current-section');
+  
+  // 현재 읽는 책이 없으면 카드 숨김
+  if (!record) {
+    section.style.display = 'none';
+    window._currentReadingRecord = null;
+    return;
+  }
+  
+  // 글로벌 저장 (쪽수 기록 화면에서 사용)
+  window._currentReadingRecord = record;
+  
+  // 책 정보
+  const emoji = (record.books && record.books.cover_emoji) 
+    ? record.books.cover_emoji 
+    : '📖';
+  document.getElementById('hc-emoji').textContent = emoji;
+  document.getElementById('hc-title').textContent = record.book_title || '-';
+  document.getElementById('hc-author').textContent = record.book_author || '(저자 미상)';
+  
+  // 진행률 처리
+  const total = record.total_pages;
+  const current = record.current_page || 0;
+  const progressWrap = document.getElementById('hc-progress-wrap');
+  const noPages = document.getElementById('hc-no-pages');
+  const completeBtn = document.getElementById('btn-current-complete');
+  
+  if (total && total > 0) {
+    // 페이지 수 있음 → 진행률 바 표시
+    const percent = Math.min(100, Math.round((current / total) * 100));
+    document.getElementById('hc-pages').textContent = `${current} / ${total}쪽`;
+    document.getElementById('hc-percent').textContent = `${percent}%`;
+    document.getElementById('hc-bar-fill').style.width = percent + '%';
+    progressWrap.style.display = 'block';
+    noPages.style.display = 'none';
+    
+    // 합의문서 § ①: 50% 이상일 때만 "다 읽었어요" 버튼 노출
+    completeBtn.style.display = percent >= 50 ? 'block' : 'none';
+  } else {
+    // 페이지 수 모름 → 안내 메시지 + 완독 버튼 항상 노출
+    progressWrap.style.display = 'none';
+    noPages.style.display = 'block';
+    completeBtn.style.display = 'block';
+  }
+  
+  section.style.display = 'block';
+}
+
+// 쪽수 기록 화면으로 이동 (SC-12 — 다음 단계 [3]에서 구현)
+function goToPageRecord() {
+  if (!window._currentReadingRecord) {
+    showToast('⚠️ 현재 읽는 책이 없어요', 'error');
+    return;
+  }
+  // TODO: 다음 단계에서 SC-12 화면 구현 후 연결
+  showToast('📝 쪽수 기록 화면 — 다음 단계에서 만듭니다');
+}
+
+// 완독 처리 (단계 [4]에서 구현)
+function markBookCompleted() {
+  showToast('📖 완독 처리 — 다음 단계에서 만듭니다');
+}
 // HTML 이스케이프 헬퍼
 function escapeHtml(str) {
   const div = document.createElement('div');
