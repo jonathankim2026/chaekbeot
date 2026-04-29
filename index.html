@@ -1315,6 +1315,207 @@ html, body {
   box-shadow: none;
   cursor: not-allowed;
 }
+/* ─── SC-13 AI 말걸기 화면 (v6 - 합의문서 § ⑤) ─── */
+#sc-talk-during {
+  background: linear-gradient(170deg, var(--teal-dk) 0%, #0a2e25 100%);
+  padding: 0;
+  justify-content: flex-start;
+  overflow-y: auto;
+}
+.td-inner {
+  display: flex; flex-direction: column;
+  width: 100%; max-width: 400px;
+  padding: 56px 24px 40px;
+  margin: 0 auto;
+}
+.td-milestone-badge {
+  align-self: center;
+  background: rgba(212,150,10,.15);
+  color: var(--gold-lt);
+  padding: 6px 16px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  margin-bottom: 16px;
+}
+.td-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.td-title {
+  font-size: 22px;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+.td-book-info {
+  font-size: 13px;
+  color: rgba(255,255,255,.5);
+}
+.td-conversation {
+  background: rgba(255,255,255,.04);
+  border-radius: 18px;
+  padding: 20px 18px;
+  margin-bottom: 16px;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.td-msg {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.td-msg-ai {
+  /* AI 말풍선 */
+}
+.td-msg-user {
+  flex-direction: row-reverse;
+}
+.td-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+.td-msg-ai .td-avatar {
+  background: rgba(212,150,10,.15);
+}
+.td-msg-user .td-avatar {
+  background: rgba(26,107,90,.3);
+}
+.td-bubble {
+  max-width: 80%;
+  padding: 12px 16px;
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.7;
+  word-break: keep-all;
+}
+.td-msg-ai .td-bubble {
+  background: rgba(212,150,10,.08);
+  color: rgba(255,255,255,.9);
+  border: 1px solid rgba(212,150,10,.15);
+  border-top-left-radius: 4px;
+}
+.td-msg-user .td-bubble {
+  background: rgba(26,107,90,.4);
+  color: #fff;
+  border-top-right-radius: 4px;
+}
+.td-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,.5);
+  font-size: 13px;
+  font-style: italic;
+}
+.td-input-area {
+  background: rgba(255,255,255,.05);
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 14px;
+}
+.td-input {
+  width: 100%;
+  background: rgba(255,255,255,.08);
+  border: 2px solid rgba(255,255,255,.12);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #fff;
+  outline: none;
+  resize: none;
+  min-height: 60px;
+  transition: border-color .2s;
+}
+.td-input:focus {
+  border-color: var(--gold-lt);
+}
+.td-input::placeholder {
+  color: rgba(255,255,255,.3);
+  font-style: italic;
+}
+.td-input-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.btn-td-send {
+  flex: 1;
+  background: var(--gold);
+  color: var(--ink);
+  border: none;
+  border-radius: 50px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-td-send:active {
+  transform: scale(.98);
+  background: var(--gold-lt);
+}
+.btn-td-send:disabled {
+  background: rgba(255,255,255,.1);
+  color: rgba(255,255,255,.3);
+  cursor: not-allowed;
+}
+.btn-td-skip {
+  background: transparent;
+  color: rgba(255,255,255,.5);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 50px;
+  padding: 12px 18px;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-td-skip:active {
+  color: #fff;
+  border-color: rgba(255,255,255,.3);
+}
+.td-finish-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+.btn-td-back-reading {
+  background: var(--teal);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 14px 22px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all .2s;
+  box-shadow: 0 4px 16px rgba(26,107,90,.3);
+}
+.btn-td-back-reading:active {
+  transform: scale(.98);
+  background: var(--teal-lt);
+}
+.td-turn-counter {
+  text-align: center;
+  font-size: 11px;
+  color: rgba(255,255,255,.3);
+  margin-top: 4px;
+}
 /* ─── SC-10 READING SUCCESS (시작 완료 화면) ─────── */
 #sc-reading-success {
   background: linear-gradient(170deg, var(--teal-dk) 0%, #0a2e25 100%);
@@ -2023,6 +2224,62 @@ document.addEventListener('DOMContentLoaded', function() {
         💾 기록 저장하기
       </button>
     </div>
+    
+  </div>
+</div>
+<!-- ══════════════════════════════════════════════════
+     SC-13: AI 말걸기 화면 (25/50/75)
+     합의문서 v1.0 § ⑤ + 마스터 프롬프트 P03~P06
+══════════════════════════════════════════════════ -->
+<div id="sc-talk-during" class="screen">
+  <div class="td-inner">
+    
+    <div class="td-milestone-badge" id="td-milestone-badge">
+      📍 25% 지점
+    </div>
+    
+    <div class="td-header">
+      <div class="td-title">📖 책벗과 잠깐 대화</div>
+      <div class="td-book-info" id="td-book-info">-</div>
+    </div>
+    
+    <!-- 대화 영역 -->
+    <div class="td-conversation" id="td-conversation">
+      <!-- 메시지가 동적으로 추가됨 -->
+      <div class="td-msg td-msg-ai">
+        <div class="td-avatar">🌿</div>
+        <div class="td-bubble">
+          <div class="td-loading" id="td-loading">
+            <div class="spinner"></div>
+            <span>책벗이 인사를 준비하고 있어요…</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 입력 영역 -->
+    <div class="td-input-area" id="td-input-area" style="display:none;">
+      <textarea class="td-input" id="td-input" 
+        placeholder="편하게 이야기해주세요. 짧아도 괜찮아요 🌿"
+        maxlength="500"></textarea>
+      <div class="td-input-actions">
+        <button class="btn-td-skip" onclick="skipTalkDuring()">
+          나중에 할게요
+        </button>
+        <button class="btn-td-send" id="btn-td-send" onclick="sendTalkDuringMessage()">
+          답하기 →
+        </button>
+      </div>
+    </div>
+    
+    <!-- 마무리 영역 (3턴 후) -->
+    <div class="td-finish-actions" id="td-finish-actions" style="display:none;">
+      <button class="btn-td-back-reading" onclick="finishTalkDuring()">
+        📖 이어서 읽으러 갈게요
+      </button>
+    </div>
+    
+    <div class="td-turn-counter" id="td-turn-counter"></div>
     
   </div>
 </div>
@@ -3270,13 +3527,22 @@ async function savePageRecord() {
     
     // 성공 피드백
     showToast(`💛 ${newEndPage}쪽 기록됐어요`);
+    // 🆕 AI 말걸기 트리거 체크 (합의문서 § ⑤)
+    const milestone = checkMilestoneTrigger(record, newEndPage);
     
-    // 1.5초 후 홈으로
-    setTimeout(() => {
-      goScreen('sc-home');
-      setTimeout(() => renderHomeScreen(), 400);
-    }, 1500);
-    
+    if (milestone) {
+      // 25/50/75 처음 도달 → AI 말걸기 화면으로
+      setTimeout(() => {
+        triggerTalkDuring(record, newEndPage, milestone);
+      }, 1500);
+    } else {
+      // 마일스톤 없음 → 1.5초 후 홈으로
+      setTimeout(() => {
+        goScreen('sc-home');
+        setTimeout(() => renderHomeScreen(), 400);
+      }, 1500);
+    }
+       
   } catch (err) {
     console.error('❌ 쪽수 기록 저장 실패:', err);
     btn.disabled = false;
@@ -3284,6 +3550,256 @@ async function savePageRecord() {
     showToast('❌ 저장 실패: ' + err.message, 'error');
   }
 }
+// ═══════════════════════════════════════════════════
+//   📖 SC-13 AI 말걸기 25/50/75 (v6 - 합의문서 § ⑤)
+//   마스터 프롬프트 P03~P06 적용
+// ═══════════════════════════════════════════════════
+
+// 마일스톤 트리거 체크 (한 책당 25/50/75 각 1회)
+function checkMilestoneTrigger(record, newPage) {
+  const total = record.total_pages;
+  if (!total || total <= 0) return null;  // 페이지 수 모르면 트리거 없음
+  
+  const newPercent = (newPage / total) * 100;
+  const oldPercent = ((record.current_page || 0) / total) * 100;
+  
+  // 75% 우선 체크 (높은 것부터)
+  if (newPercent >= 75 && oldPercent < 75 && !record.ai_75_done) return 75;
+  if (newPercent >= 50 && oldPercent < 50 && !record.ai_50_done) return 50;
+  if (newPercent >= 25 && oldPercent < 25 && !record.ai_25_done) return 25;
+  
+  return null;
+}
+
+// AI 말걸기 화면 진입
+function triggerTalkDuring(record, newPage, milestone) {
+  // 글로벌 저장
+  window._tdContext = {
+    record: record,
+    book: {
+      title: record.book_title,
+      author: record.book_author,
+      current_page: newPage,
+      total_pages: record.total_pages,
+      summary_oneline: record.books?.summary_oneline || null
+    },
+    milestone: milestone,
+    turnCount: 0,
+    conversation: []
+  };
+  
+  // 화면 초기화
+  document.getElementById('td-milestone-badge').textContent = `📍 ${milestone}% 지점`;
+  document.getElementById('td-book-info').textContent = 
+    `${record.book_title} · ${record.book_author || '저자 미상'}`;
+  
+  // 대화 영역 초기화
+  const conv = document.getElementById('td-conversation');
+  conv.innerHTML = `
+    <div class="td-msg td-msg-ai">
+      <div class="td-avatar">🌿</div>
+      <div class="td-bubble">
+        <div class="td-loading">
+          <div class="spinner"></div>
+          <span>책벗이 인사를 준비하고 있어요…</span>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // 입력·마무리 영역 숨김
+  document.getElementById('td-input-area').style.display = 'none';
+  document.getElementById('td-finish-actions').style.display = 'none';
+  document.getElementById('td-turn-counter').textContent = '';
+  
+  goScreen('sc-talk-during');
+  
+  // AI 첫 인사 호출
+  fetchAIGreeting();
+}
+
+// AI 첫 인사 가져오기
+async function fetchAIGreeting() {
+  const ctx = window._tdContext;
+  if (!ctx) return;
+  
+  try {
+    const response = await fetch('/api/talk-during', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        book: ctx.book,
+        user: {
+          name: state.name,
+          grade: state.grade,
+          readingTaste: state.readingTaste,
+          readingLevel: state.readingLevel
+        },
+        milestone: ctx.milestone
+      })
+    });
+    
+    if (!response.ok) {
+      throw new Error(`서버 응답 오류 (${response.status})`);
+    }
+    
+    const data = await response.json();
+    
+    const conv = document.getElementById('td-conversation');
+    conv.innerHTML = '';
+    addAIMessage(data.message);
+    ctx.conversation.push({ role: 'assistant', content: data.message });
+    
+    document.getElementById('td-input-area').style.display = 'block';
+    document.getElementById('td-input').value = '';
+    document.getElementById('td-turn-counter').textContent = `${ctx.turnCount + 1}/3턴`;
+    
+    setTimeout(() => document.getElementById('td-input').focus(), 300);
+    
+    console.log('✅ AI 첫 인사 수신:', data.usage);
+    
+  } catch (err) {
+    console.error('AI 인사 실패:', err);
+    const conv = document.getElementById('td-conversation');
+    conv.innerHTML = `
+      <div class="td-msg td-msg-ai">
+        <div class="td-avatar">🌿</div>
+        <div class="td-bubble">
+          책벗이 잠시 자리를 비웠어요. 이어서 읽어봐요 📖
+        </div>
+      </div>
+    `;
+    document.getElementById('td-finish-actions').style.display = 'flex';
+  }
+}
+
+// AI 메시지 추가
+function addAIMessage(text) {
+  const conv = document.getElementById('td-conversation');
+  const div = document.createElement('div');
+  div.className = 'td-msg td-msg-ai';
+  div.innerHTML = `
+    <div class="td-avatar">🌿</div>
+    <div class="td-bubble">${escapeHtml(text)}</div>
+  `;
+  conv.appendChild(div);
+  conv.scrollTop = conv.scrollHeight;
+}
+
+// 사용자 메시지 추가
+function addUserMessage(text) {
+  const conv = document.getElementById('td-conversation');
+  const div = document.createElement('div');
+  div.className = 'td-msg td-msg-user';
+  div.innerHTML = `
+    <div class="td-avatar">📖</div>
+    <div class="td-bubble">${escapeHtml(text)}</div>
+  `;
+  conv.appendChild(div);
+  conv.scrollTop = conv.scrollHeight;
+}
+
+// 사용자 답변 보내기
+async function sendTalkDuringMessage() {
+  const ctx = window._tdContext;
+  if (!ctx) return;
+  
+  const input = document.getElementById('td-input');
+  const text = input.value.trim();
+  
+  if (!text) {
+    input.focus();
+    return;
+  }
+  
+  addUserMessage(text);
+  ctx.conversation.push({ role: 'user', content: text });
+  ctx.turnCount += 1;
+  
+  input.value = '';
+  input.disabled = true;
+  document.getElementById('btn-td-send').disabled = true;
+  
+  // 3턴 도달 → 마무리
+  if (ctx.turnCount >= 3) {
+    finalizeTalkDuring();
+    return;
+  }
+  
+  // 격려 응답 (간단 폴백)
+  setTimeout(() => {
+    let encouragement;
+    if (ctx.turnCount === 1) {
+      encouragement = '와, 그 부분이 마음에 남으셨군요. 한 가지 더 — 읽으면서 어떤 기분이 들었어요?';
+    } else if (ctx.turnCount === 2) {
+      encouragement = '그 마음 잘 알 것 같아요. 마지막으로, 이 책에서 한 마디 더 떠오르는 게 있나요?';
+    }
+    
+    if (encouragement) {
+      addAIMessage(encouragement);
+      ctx.conversation.push({ role: 'assistant', content: encouragement });
+      document.getElementById('td-turn-counter').textContent = `${ctx.turnCount + 1}/3턴`;
+    }
+    
+    input.disabled = false;
+    document.getElementById('btn-td-send').disabled = false;
+    input.focus();
+  }, 800);
+}
+
+// 마무리 (3턴 완료)
+function finalizeTalkDuring() {
+  const ctx = window._tdContext;
+  if (!ctx) return;
+  
+  document.getElementById('td-input-area').style.display = 'none';
+  
+  addAIMessage('이야기 정말 좋았어요! 이어서 읽어봐요 📖✨');
+  
+  document.getElementById('td-finish-actions').style.display = 'flex';
+  document.getElementById('td-turn-counter').textContent = '대화 마침';
+  
+  updateMilestoneDone(ctx.record.id, ctx.milestone);
+}
+
+// 건너뛰기
+function skipTalkDuring() {
+  const ctx = window._tdContext;
+  if (ctx) {
+    updateMilestoneDone(ctx.record.id, ctx.milestone);
+  }
+  goScreen('sc-home');
+  setTimeout(() => renderHomeScreen(), 400);
+}
+
+// 마무리하고 홈으로
+function finishTalkDuring() {
+  goScreen('sc-home');
+  setTimeout(() => renderHomeScreen(), 400);
+}
+
+// Supabase ai_XX_done 갱신
+async function updateMilestoneDone(recordId, milestone) {
+  if (!sb || !recordId) return;
+  
+  const column = `ai_${milestone}_done`;
+  
+  try {
+    const { error } = await sb
+      .from('reading_records')
+      .update({ [column]: true })
+      .eq('id', recordId);
+    
+    if (error) {
+      console.error('마일스톤 갱신 실패:', error);
+    } else {
+      console.log(`✅ ${column} = true`);
+    }
+  } catch (e) {
+    console.error('마일스톤 갱신 예외:', e);
+  }
+}
+
 // 완독 처리 (단계 [4]에서 구현)
 function markBookCompleted() {
   showToast('📖 완독 처리 — 다음 단계에서 만듭니다');
