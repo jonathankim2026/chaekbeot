@@ -116,7 +116,7 @@ function buildSystemPrompt(book, user, milestone, gradeBand) {
   const currentPage = book.current_page || 0;
   const totalPages = book.total_pages || 0;
   const isDbBook = !!(book.summary_oneline);
-  
+  const grade = user.grade || '초5';
   // 학년별 언어 기준
   const langGuide = {
     lower: '3~5문장, 초등 교과서 어휘, 친구처럼 반말 OK',
