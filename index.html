@@ -1516,6 +1516,172 @@ html, body {
   color: rgba(255,255,255,.3);
   margin-top: 4px;
 }
+/* ─── SC-14 완독 축하 화면 (v6 - 합의문서 § ⑥) ─── */
+#sc-finish {
+  background: linear-gradient(170deg, var(--teal-dk) 0%, #0a2e25 100%);
+  padding: 0;
+  justify-content: flex-start;
+  overflow-y: auto;
+}
+.fn-inner {
+  display: flex; flex-direction: column;
+  width: 100%; max-width: 400px;
+  padding: 56px 24px 40px;
+  margin: 0 auto;
+  align-items: center;
+}
+.fn-celebrate-icon {
+  font-size: 72px;
+  margin-bottom: 20px;
+  animation: popIn .8s cubic-bezier(.34,1.56,.64,1);
+}
+.fn-title {
+  font-size: 26px;
+  font-weight: 900;
+  color: #fff;
+  text-align: center;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+.fn-subtitle {
+  font-size: 14px;
+  color: var(--gold-lt);
+  text-align: center;
+  margin-bottom: 28px;
+  font-family: 'Nanum Pen Script', cursive;
+  font-size: 18px;
+}
+.fn-book-card {
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 18px;
+  padding: 22px 20px;
+  margin-bottom: 20px;
+  width: 100%;
+  text-align: center;
+}
+.fn-book-emoji {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 12px;
+}
+.fn-book-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.3;
+  margin-bottom: 4px;
+  word-break: keep-all;
+}
+.fn-book-author {
+  font-size: 13px;
+  color: rgba(255,255,255,.55);
+  margin-bottom: 14px;
+}
+.fn-book-meta {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  font-size: 12px;
+  color: rgba(255,255,255,.6);
+  padding-top: 14px;
+  border-top: 1px dashed rgba(255,255,255,.1);
+}
+.fn-book-meta-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.fn-book-meta-label {
+  font-size: 10px;
+  color: rgba(255,255,255,.4);
+  letter-spacing: .05em;
+}
+.fn-book-meta-val {
+  font-weight: 700;
+  color: var(--gold-lt);
+}
+.fn-ai-message {
+  background: rgba(212,150,10,.08);
+  border-left: 3px solid var(--gold-lt);
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 22px;
+  width: 100%;
+  word-break: keep-all;
+}
+.fn-ai-message-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gold-lt);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.fn-ai-message-text {
+  font-size: 14px;
+  line-height: 1.8;
+  color: rgba(255,255,255,.88);
+  white-space: pre-wrap;
+}
+.fn-ai-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255,255,255,.5);
+  font-size: 13px;
+  font-style: italic;
+}
+.fn-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin-top: 8px;
+}
+.btn-fn-digest {
+  background: var(--gold);
+  color: var(--ink);
+  border: none;
+  border-radius: 50px;
+  padding: 16px 24px;
+  font-size: 15px;
+  font-weight: 800;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all .2s;
+  box-shadow: 0 4px 20px rgba(212,150,10,.3);
+}
+.btn-fn-digest:active {
+  transform: scale(.98);
+  background: var(--gold-lt);
+}
+.btn-fn-home {
+  background: transparent;
+  color: rgba(255,255,255,.6);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 50px;
+  padding: 14px 24px;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-fn-home:active {
+  color: #fff;
+  border-color: rgba(255,255,255,.4);
+}
+.fn-digest-coming-soon {
+  font-size: 11px;
+  color: rgba(255,255,255,.35);
+  text-align: center;
+  margin-top: 4px;
+  font-style: italic;
+}
 /* ─── SC-10 READING SUCCESS (시작 완료 화면) ─────── */
 #sc-reading-success {
   background: linear-gradient(170deg, var(--teal-dk) 0%, #0a2e25 100%);
@@ -2280,6 +2446,60 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
     
     <div class="td-turn-counter" id="td-turn-counter"></div>
+    
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SC-14: 완독 축하 화면 (v6 - 합의문서 § ⑥)
+     자동 100% + 수동 50%+ 진입
+══════════════════════════════════════════════════ -->
+<div id="sc-finish" class="screen">
+  <div class="fn-inner">
+    
+    <div class="fn-celebrate-icon">🎉</div>
+    
+    <div class="fn-title">완독을 축하드려요!</div>
+    <div class="fn-subtitle">한 권을 끝까지 읽어내셨네요 🌿</div>
+    
+    <!-- 완독한 책 정보 -->
+    <div class="fn-book-card">
+      <span class="fn-book-emoji" id="fn-book-emoji">📖</span>
+      <div class="fn-book-title" id="fn-book-title">-</div>
+      <div class="fn-book-author" id="fn-book-author">-</div>
+      
+      <div class="fn-book-meta">
+        <div class="fn-book-meta-item">
+          <span class="fn-book-meta-label">총 페이지</span>
+          <span class="fn-book-meta-val" id="fn-pages">-</span>
+        </div>
+        <div class="fn-book-meta-item">
+          <span class="fn-book-meta-label">완독일</span>
+          <span class="fn-book-meta-val" id="fn-date">-</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 책벗 AI 메시지 -->
+    <div class="fn-ai-message">
+      <div class="fn-ai-message-label">✨ 책벗의 한 마디</div>
+      <div class="fn-ai-loading" id="fn-ai-loading">
+        <div class="spinner"></div>
+        <span>책벗이 마음을 정리하고 있어요…</span>
+      </div>
+      <div class="fn-ai-message-text" id="fn-ai-message-text" style="display:none;"></div>
+    </div>
+    
+    <!-- 액션 버튼 -->
+    <div class="fn-actions">
+      <button class="btn-fn-digest" onclick="goToDigest()">
+        🌿 소화하기로 가기
+      </button>
+      <div class="fn-digest-coming-soon">소화하기 5턴은 다음 단계에서 만듭니다</div>
+      <button class="btn-fn-home" onclick="finishToHome()">
+        🏠 홈으로 돌아가기
+      </button>
+    </div>
     
   </div>
 </div>
@@ -3453,11 +3673,19 @@ async function savePageRecord() {
     return;
   }
   
-  // 검증 ② 총 페이지 초과 확인
+ // 검증 ② 총 페이지 초과 또는 100% 도달 → 완독 확인
   const totalPages = record.total_pages;
-  if (totalPages && newEndPage > totalPages) {
-    showToast(`🌿 총 ${totalPages}쪽을 넘어섰어요. 완독 처리는 다음 단계에서 만듭니다`, 'error');
-    return;
+  if (totalPages && newEndPage >= totalPages) {
+    // 완독 도달
+    if (confirm(`🎉 「${record.book_title}」 끝까지 읽으셨네요!\n\n완독으로 처리할까요?`)) {
+      // 완독 처리 진행
+      const finalRecord = { ...record, current_page: totalPages };
+      await processCompletion(finalRecord);
+      return;
+    } else {
+      // 사용자가 거부 → 그냥 마지막 쪽까지로 갱신만
+      newEndPage = totalPages;
+    }
   }
   
   // 메모·어휘 수집
@@ -3801,8 +4029,174 @@ async function updateMilestoneDone(recordId, milestone) {
 }
 
 // 완독 처리 (단계 [4]에서 구현)
-function markBookCompleted() {
-  showToast('📖 완독 처리 — 다음 단계에서 만듭니다');
+// ═══════════════════════════════════════════════════
+//   📖 SC-14 완독 처리 (v6 - 합의문서 § ⑥)
+// ═══════════════════════════════════════════════════
+
+// 수동 완독 (홈 카드 "다 읽었어요" 버튼)
+async function markBookCompleted() {
+  const record = window._currentReadingRecord;
+  if (!record) {
+    showToast('⚠️ 현재 읽는 책이 없어요', 'error');
+    return;
+  }
+  
+  // 확인 대화상자
+  const totalPages = record.total_pages;
+  const currentPage = record.current_page || 0;
+  const percent = totalPages ? Math.round((currentPage / totalPages) * 100) : null;
+  
+  let confirmMsg = `「${record.book_title}」을 다 읽으셨나요? 🌿\n\n`;
+  if (percent !== null && percent < 95) {
+    confirmMsg += `현재 ${percent}% 읽으셨는데,\n완독으로 처리할까요?`;
+  } else {
+    confirmMsg += `완독으로 처리됩니다.`;
+  }
+  
+  if (!confirm(confirmMsg)) return;
+  
+  // 완독 처리 시작
+  await processCompletion(record);
+}
+
+// 완독 처리 핵심 함수
+async function processCompletion(record) {
+  // 데모 모드
+  if (!sb || !state.userId) {
+    showFinishScreen(record);
+    return;
+  }
+  
+  try {
+    const finalPage = record.total_pages || record.current_page;
+    
+    const { error } = await sb
+      .from('reading_records')
+      .update({
+        status: 'completed',
+        completed_at: new Date().toISOString(),
+        current_page: finalPage,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', record.id);
+    
+    if (error) throw error;
+    
+    console.log('✅ 완독 처리:', record.book_title);
+    
+    // 화면 데이터 갱신용 record 업데이트
+    record.current_page = finalPage;
+    record.completed_at = new Date().toISOString();
+    record.status = 'completed';
+    
+    // 완독 축하 화면으로
+    showFinishScreen(record);
+    
+  } catch (err) {
+    console.error('❌ 완독 처리 실패:', err);
+    showToast('❌ 완독 처리 실패: ' + err.message, 'error');
+  }
+}
+
+// 완독 축하 화면 표시
+function showFinishScreen(record) {
+  // 글로벌 저장
+  window._finishContext = {
+    record: record,
+    book: {
+      title: record.book_title,
+      author: record.book_author,
+      total_pages: record.total_pages,
+      summary_oneline: record.books?.summary_oneline || null
+    }
+  };
+  
+  // 화면 초기화
+  const emoji = (record.books && record.books.cover_emoji) 
+    ? record.books.cover_emoji : '📖';
+  document.getElementById('fn-book-emoji').textContent = emoji;
+  document.getElementById('fn-book-title').textContent = record.book_title || '-';
+  document.getElementById('fn-book-author').textContent = record.book_author || '(저자 미상)';
+  document.getElementById('fn-pages').textContent = record.total_pages 
+    ? `${record.total_pages}쪽` 
+    : '-';
+  
+  const today = new Date();
+  const dateStr = `${today.getFullYear()}.${String(today.getMonth()+1).padStart(2,'0')}.${String(today.getDate()).padStart(2,'0')}`;
+  document.getElementById('fn-date').textContent = dateStr;
+  
+  // AI 메시지 영역 초기화
+  document.getElementById('fn-ai-loading').style.display = 'flex';
+  document.getElementById('fn-ai-message-text').style.display = 'none';
+  document.getElementById('fn-ai-message-text').textContent = '';
+  
+  goScreen('sc-finish');
+  
+  // AI 축하 메시지 호출
+  fetchFinishMessage();
+}
+
+// AI 완독 축하 메시지 가져오기
+async function fetchFinishMessage() {
+  const ctx = window._finishContext;
+  if (!ctx) return;
+  
+  const loadingEl = document.getElementById('fn-ai-loading');
+  const textEl = document.getElementById('fn-ai-message-text');
+  
+  try {
+    const response = await fetch('/api/finish', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        book: ctx.book,
+        user: {
+          name: state.name,
+          grade: state.grade,
+          readingTaste: state.readingTaste,
+          readingLevel: state.readingLevel
+        }
+      })
+    });
+    
+    if (!response.ok) {
+      throw new Error(`서버 응답 오류 (${response.status})`);
+    }
+    
+    const data = await response.json();
+    
+    loadingEl.style.display = 'none';
+    textEl.style.display = 'block';
+    textEl.textContent = data.message;
+    
+    console.log('✅ 완독 메시지 수신:', data.usage);
+    
+  } catch (err) {
+    console.error('완독 메시지 실패:', err);
+    // 폴백 메시지 직접 표시
+    loadingEl.style.display = 'none';
+    textEl.style.display = 'block';
+    textEl.textContent = `${state.name || '독자'} 님, 「${ctx.book.title}」을 끝까지 읽으셨네요.
+
+마지막 페이지를 덮으신 그 순간이 어떤 느낌이었을까요? 책 한 권을 완독한다는 건 단순히 페이지를 넘긴 게 아니에요. ${state.name || '독자'} 님 안에 작은 무언가가 자란 거예요.
+
+곧 그 마음을 한 번 더 떠올려보는 시간이 기다리고 있어요. 조급해하지 마시고, 잠시 책을 안고 머물러주세요. 🌿`;
+  }
+}
+
+// 소화하기로 가기 (다음 세션에 만들 것)
+function goToDigest() {
+  showToast('🌿 소화하기 5턴 — 다음 단계에서 만듭니다');
+  setTimeout(() => {
+    goScreen('sc-home');
+    setTimeout(() => renderHomeScreen(), 400);
+  }, 1500);
+}
+
+// 홈으로 돌아가기
+function finishToHome() {
+  goScreen('sc-home');
+  setTimeout(() => renderHomeScreen(), 400);
 }
 // HTML 이스케이프 헬퍼
 function escapeHtml(str) {
